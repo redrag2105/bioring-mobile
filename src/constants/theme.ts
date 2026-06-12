@@ -1,29 +1,37 @@
 import { Platform } from 'react-native'
 
 export const THEME = {
-  paper: '#f9f9f9',
-  paperDark: '#f0f0f0',
-  forest: '#14281d',
-  bioringMain: '#d4a574',
-  bioringDeep: '#0d1a13',
-  ink: '#14281d',
-  inkLight: '#3a5a40',
-  inkMuted: '#5a7a68',
-  clay: '#e6b8a2',
-  gold: '#d4a574',
-  info: '#3b82f6',
-  infoBg: '#eff6ff',
-  warningBg: '#fef3c7',
-  warning: '#d97706',
-  error: '#ef4444', //#dc2626
-  errorLight: '#dc26261a',
-  errorBg: '#fef2f2'
+  ringPrimary: '#1A3642',
+  ringSecondary: '#0C1F27',
+  ringAccent: '#B69B7A',
+  ringBackground: '#F8F7F5',
+  ringSurface: '#FFFFFF',
+
+  textMain: '#1E2328',
+  textBody: '#4A525A',
+  textMuted: '#8C939A',
+  textInverse: '#FFFFFF',
+
+  btnPrimaryBg: '#B69B7A',
+  btnPrimaryText: '#1E2328',
+  btnPrimaryHover: '#A08768',
+  btnSecondaryBorder: '#1A3642',
+  btnDisabledBg: '#EAE7E1',
+  btnDisabledText: '#A8A39C',
+  borderLight: '#E6E4E0',
+
+  statusError: '#A85A54',
+  statusSuccess: '#4A6B5C'
 } as const
 
 export const FONTS = {
-  serif: Platform.select({ ios: 'Georgia', android: 'serif', default: 'serif' }),
-  sans: Platform.select({ ios: 'System', android: 'sans-serif', default: 'sans-serif' }),
-  mono: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' })
+  serif: Platform.select({ ios: 'Gretha-Regular', android: 'Gretha-Regular', default: 'Gretha-Regular' }),
+  serifItalic: Platform.select({ ios: 'Gretha-SemiBoldItalic', android: 'Gretha-SemiBoldItalic', default: 'Gretha-SemiBoldItalic' }),
+  serifMedium: Platform.select({ ios: 'Gretha-Medium', android: 'Gretha-Medium', default: 'Gretha-Medium' }),
+  serifSemibold: Platform.select({ ios: 'Gretha-Medium', android: 'Gretha-Medium', default: 'Gretha-Medium' }),
+  serifBold: Platform.select({ ios: 'Gretha-Bold', android: 'Gretha-Bold', default: 'Gretha-Bold' }),
+  sans: Platform.select({ ios: 'Lato', android: 'Lato', default: 'Lato' }),
+  sansBold: Platform.select({ ios: 'Lato-Bold', android: 'Lato-Bold', default: 'Lato-Bold' })
 } as const
 
 export type ThemeColors = keyof typeof THEME

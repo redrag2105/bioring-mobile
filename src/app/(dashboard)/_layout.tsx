@@ -23,11 +23,11 @@ function TabButton({
   onPress: () => void
   children: React.ReactNode
 }) {
-  const activeColor = isHome ? THEME.bioringMain : THEME.forest
+  const activeColor = isHome ? THEME.ringAccent : THEME.ringPrimary
 
   const animatedBgStyle = useAnimatedStyle(() => ({
     backgroundColor: withTiming(
-      isFocused ? (isHome ? 'rgba(212, 165, 116, 0.12)' : 'rgba(74, 121, 95, 0.12)') : 'transparent',
+      isFocused ? (isHome ? 'rgba(182, 155, 122, 0.16)' : 'rgba(26, 54, 66, 0.12)') : 'transparent',
       { duration: 200 }
     ),
     transform: [{ scale: withTiming(isFocused ? 1 : 0.95, { duration: 150 }) }]
@@ -51,8 +51,8 @@ function TabButton({
         {children}
       </Animated.View>
       <Animated.Text
-        className='mt-[3px] font-sans text-[10px] font-semibold tracking-[0.1px]'
-        style={[{ color: isFocused ? activeColor : THEME.inkMuted }, animatedTextStyle]}
+        className='mt-[3px] font-sans-bold text-[10px] tracking-[0.1px]'
+        style={[{ color: isFocused ? activeColor : THEME.textMuted }, animatedTextStyle]}
         numberOfLines={1}
       >
         {label}
@@ -106,7 +106,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
       pointerEvents={isKeyboardVisible ? 'none' : 'auto'}
     >
       <Animated.View
-        className='shadow-tab-bar elevation-12 w-full flex-row items-center justify-between border border-forest/10 bg-paper/[.98] px-1.5'
+        className='shadow-tab-bar elevation-12 w-full flex-row items-center justify-between border border-ui-border bg-ring-surface px-1.5'
         style={pillAnimatedStyle}
       >
         {state.routes.map((route: any, index: number) => {
@@ -126,7 +126,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             }
           }
 
-          const activeColor = isHome ? THEME.bioringMain : THEME.forest
+          const activeColor = isHome ? THEME.ringAccent : THEME.ringPrimary
 
           return (
             <TabButton
@@ -138,7 +138,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               onPress={onPress}
             >
               {options.tabBarIcon?.({
-                color: isFocused ? activeColor : THEME.inkMuted,
+                color: isFocused ? activeColor : THEME.textMuted,
                 focused: isFocused,
                 size: 22
               })}
@@ -158,7 +158,7 @@ export default function DashboardLayout() {
         headerShown: false,
         animation: 'none',
         lazy: true,
-        sceneStyle: { backgroundColor: THEME.paper }
+        sceneStyle: { backgroundColor: THEME.ringBackground }
       }}
     >
       <Tabs.Screen

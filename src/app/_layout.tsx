@@ -1,6 +1,7 @@
 import '@/global.css'
+import { useFonts } from 'expo-font'
 import * as Linking from 'expo-linking'
-import { Stack, useRouter, useSegments } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
@@ -18,7 +19,6 @@ export { ErrorBoundary } from 'expo-router'
  */
 function useAuthDeepLinkHandler() {
   const router = useRouter()
-  const segments = useSegments()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
@@ -79,6 +79,16 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   useAuthDeepLinkHandler()
+  const [fontsLoaded] = useFonts({
+    'Gretha-Regular': require('../assets/fonts/Gretha Regular.ttf'),
+    'Gretha-Medium': require('../assets/fonts/Gretha Medium.ttf'),
+    'Gretha-Bold': require('../assets/fonts/Gretha Bold.ttf'),
+    'Gretha-SemiBoldItalic': require('../assets/fonts/Gretha-SemiBoldItalic.otf')
+  })
+
+  if (!fontsLoaded) {
+    return null
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

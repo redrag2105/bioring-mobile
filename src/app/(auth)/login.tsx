@@ -1,10 +1,10 @@
 import { HStack } from '@/components/ui/hstack'
 import { Text } from '@/components/ui/text'
 import { VStack } from '@/components/ui/vstack'
-import { FONTS, THEME } from '@/constants/theme'
+import { THEME } from '@/constants/theme'
 import { useGoogleAuth } from '@/hooks/useGoogleAuth'
 import { useRouter } from 'expo-router'
-import { Activity, Shield, Sparkles, Thermometer } from 'lucide-react-native'
+import { AudioWaveform, Fingerprint, Heart } from 'lucide-react-native'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -49,24 +49,19 @@ function GoogleLogo({ size = 20 }: { size?: number }) {
 function FeatureItem({
   icon: IconComponent,
   title,
-  iconColor,
   delay
 }: {
-  icon: typeof Thermometer
+  icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>
   title: string
-  iconColor: string
   delay: number
 }) {
   return (
     <Animated.View entering={FadeInUp.delay(delay).duration(500)}>
-      <HStack className='items-center gap-3 rounded-2xl px-4 py-3' style={{ backgroundColor: THEME.paperDark }}>
-        <View
-          className='h-10 w-10 items-center justify-center rounded-full'
-          style={{ backgroundColor: 'rgba(74, 121, 95, 0.15)' }}
-        >
-          <IconComponent size={20} color={iconColor} strokeWidth={1.5} />
+      <HStack className='items-center gap-3 rounded-2xl bg-btn-disabled px-4 py-3'>
+        <View className='h-10 w-10 items-center justify-center rounded-full bg-ring-primary/10'>
+          <IconComponent size={19} color={THEME.ringPrimary} strokeWidth={1.35} />
         </View>
-        <Text className='flex-1 text-sm' style={{ color: THEME.ink }}>
+        <Text className='flex-1 font-sans text-sm text-txt-main'>
           {title}
         </Text>
       </HStack>
@@ -100,12 +95,12 @@ export default function LoginScreen() {
   }, [error])
 
   return (
-    <View className='flex-1' style={{ backgroundColor: THEME.paper }}>
+    <View className='flex-1 bg-ring-background'>
       {/* Subtle decorative circle */}
       <View
         className='absolute bottom-0 left-0 h-48 w-48 rounded-full opacity-20'
         style={{
-          backgroundColor: '#f0f6f2',
+          backgroundColor: THEME.btnDisabledBg,
           transform: [{ translateX: -64 }, { translateY: 64 }]
         }}
       />
@@ -123,56 +118,45 @@ export default function LoginScreen() {
             {/* Logo & Brand */}
             <Animated.View entering={FadeInDown.delay(100).duration(500)}>
               <VStack className='mb-8 items-center'>
-                <View
-                  className='mb-4 h-16 w-16 items-center justify-center rounded-2xl shadow-md'
-                  style={{ backgroundColor: 'white' }}
-                >
-                  <Activity size={36} color={THEME.bioringMain} strokeWidth={1.5} />
+                <View className='mb-3 items-center justify-center'>
+                  <Fingerprint size={35} color={THEME.ringPrimary} strokeWidth={1.15} />
                 </View>
-                <Text
-                  className='text-3xl italic'
-                  style={{ color: THEME.forest, fontFamily: FONTS.serif, fontWeight: '600' }}
-                >
-                  BioRing
+                <Text className='font-serif-italic text-3xl tracking-[1.5px] text-ring-primary'>
+                  BIORING
                 </Text>
-                <Text className='mt-1 text-xs uppercase tracking-widest' style={{ color: THEME.inkLight }}>
-                  Smart Health Ring
+                <Text className='mt-1 font-sans text-xs uppercase tracking-widest text-txt-body'>
+                  UNIQUE BIOMETRIC UNIQUE Ring
                 </Text>
               </VStack>
             </Animated.View>
 
             {/* Main Card */}
             <Animated.View entering={FadeInUp.delay(200).duration(500)}>
-              <View className='rounded-[2rem] p-6 shadow-lg' style={{ backgroundColor: 'rgba(255,255,255,0.94)' }}>
+              <View className='rounded-[2rem] border border-ui-border bg-ring-surface p-6 shadow-lg'>
                 <VStack className='gap-5'>
                   {/* Welcome text */}
                   <VStack className='items-center gap-2'>
-                    <Text className='text-2xl' style={{ color: THEME.ink, fontFamily: FONTS.serif, fontWeight: '600' }}>
+                    <Text className='font-serif-semibold text-2xl text-txt-main'>
                       Welcome back
                     </Text>
-                    <Text className='text-center text-sm leading-5' style={{ color: THEME.inkLight }}>
+                    <Text className='text-center font-sans text-sm leading-5 text-txt-body'>
                       Sign in to...
                     </Text>
                   </VStack>
 
                   {/* Google Sign-In button */}
                   <TouchableOpacity
-                    className='flex-row items-center justify-center rounded-full px-6 py-4 shadow-sm'
-                    style={{
-                      backgroundColor: 'white',
-                      borderWidth: 1,
-                      borderColor: 'rgba(0,0,0,0.08)'
-                    }}
+                    className='flex-row items-center justify-center rounded-full border border-ui-border bg-ring-surface px-6 py-4 shadow-sm'
                     onPress={handleGoogleSignIn}
                     disabled={isLoading}
                     activeOpacity={0.8}
                   >
                     {isLoading ? (
-                      <ActivityIndicator size='small' color={THEME.ink} />
+                      <ActivityIndicator size='small' color={THEME.textMain} />
                     ) : (
                       <>
                         <GoogleLogo size={20} />
-                        <Text className='font-semibold' style={{ color: THEME.ink }}>
+                        <Text className='font-sans-bold text-txt-main'>
                           Continue with Google
                         </Text>
                       </>
@@ -181,31 +165,28 @@ export default function LoginScreen() {
 
                   {/* Divider */}
                   <HStack className='items-center gap-4'>
-                    <View className='h-px flex-1' style={{ backgroundColor: 'rgba(0,0,0,0.08)' }} />
-                    <Text className='text-xs' style={{ color: THEME.inkLight }}>
+                    <View className='h-px flex-1 bg-ui-border' />
+                    <Text className='font-sans text-xs text-txt-body'>
                       Why BioRing?
                     </Text>
-                    <View className='h-px flex-1' style={{ backgroundColor: 'rgba(0,0,0,0.08)' }} />
+                    <View className='h-px flex-1 bg-ui-border' />
                   </HStack>
 
                   {/* Features */}
                   <VStack className='gap-3'>
                     <FeatureItem
-                      icon={Activity}
-                      title='24/7 Vital Signs Monitoring'
-                      iconColor={THEME.forest}
+                      icon={AudioWaveform}
+                      title='Your unique rhythm, worn forever'
                       delay={300}
                     />
                     <FeatureItem
-                      icon={Sparkles}
-                      title='AI-powered health insights'
-                      iconColor={THEME.bioringMain}
+                      icon={Fingerprint}
+                      title='Wear your story, etched within'
                       delay={400}
                     />
                     <FeatureItem
-                      icon={Shield}
-                      title='Secure, private cloud sync'
-                      iconColor={THEME.bioringDeep}
+                      icon={Heart}
+                      title='Love captured in every detail'
                       delay={500}
                     />
                   </VStack>
@@ -215,13 +196,13 @@ export default function LoginScreen() {
 
             {/* Terms */}
             <Animated.View entering={FadeInUp.delay(600).duration(400)}>
-              <Text className='mt-6 text-center text-xs leading-4' style={{ color: THEME.inkLight }}>
+              <Text className='mt-6 text-center font-sans text-xs leading-4 text-txt-body'>
                 By signing in, you agree to our{' '}
-                <Text className='text-xs underline' style={{ color: THEME.forest }}>
+                <Text className='font-sans text-xs text-ring-primary underline'>
                   Terms of Service
                 </Text>{' '}
                 and{' '}
-                <Text className='text-xs underline' style={{ color: THEME.forest }}>
+                <Text className='font-sans text-xs text-ring-primary underline'>
                   Privacy Policy
                 </Text>
               </Text>
@@ -230,7 +211,7 @@ export default function LoginScreen() {
             {/* Footer */}
             <Animated.View entering={FadeInUp.delay(700).duration(400)}>
               <HStack className='mt-6 items-center justify-center gap-1'>
-                <Text className='text-sm' style={{ color: THEME.inkLight }}>
+                <Text className='font-sans text-sm text-txt-body'>
                   First time here?
                 </Text>
                 <TouchableOpacity
@@ -238,7 +219,7 @@ export default function LoginScreen() {
                     Alert.alert('New Account', 'Signing in with Google will automatically create your account.')
                   }
                 >
-                  <Text className='text-sm font-semibold underline' style={{ color: THEME.forest }}>
+                  <Text className='font-sans-bold text-sm text-ring-primary underline'>
                     Learn more
                   </Text>
                 </TouchableOpacity>

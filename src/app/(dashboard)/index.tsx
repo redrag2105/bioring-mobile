@@ -24,15 +24,15 @@ export default function Dashboard() {
   }, [queryClient])
 
   return (
-    <View className='flex-1 bg-paper'>
+    <View className='flex-1 bg-ring-background'>
       <SafeAreaView className='flex-1' edges={['top']}>
         {/* Header */}
         <Animated.View entering={FadeIn.duration(400)}>
           <HStack className='items-center justify-between px-5 py-4'>
             <VStack>
-              <Text className='font-sans text-[13px] uppercase tracking-wider text-ink-muted'> Good morning</Text>
-              <Text className='mt-1 py-2 font-serif text-[28px] font-semibold leading-9 text-ink'>
-                Your <Text className='font-serif italic' style={{ color: THEME.bioringMain }}>Sanctuary</Text>
+              <Text className='font-sans text-[13px] uppercase tracking-wider text-txt-muted'> Good morning</Text>
+              <Text className='mt-1 py-2 font-serif-semibold text-[28px] leading-9 text-txt-main'>
+                Your <Text className='font-serif-italic text-ring-accent'>Sanctuary</Text>
               </Text>
             </VStack>
           </HStack>
@@ -43,7 +43,7 @@ export default function Dashboard() {
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}  />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={THEME.ringAccent} />}
         >
           {/* Bottom spacing for tab bar */}
           <View className='h-[100px]' />

@@ -26,20 +26,20 @@ function SettingsItem({
     <TouchableOpacity
       onPress={onPress}
       disabled={!onPress}
-      className='flex-row items-center border-b border-[rgba(0,0,0,0.04)] px-4 py-3.5'
+      className='flex-row items-center border-b border-ui-border px-4 py-3.5'
     >
       <View
         className={`mr-3.5 h-9 w-9 items-center justify-center rounded-[10px] ${
-          danger ? 'bg-[rgba(220,38,38,0.1)]' : 'bg-forest/10'
+          danger ? 'bg-status-error/10' : 'bg-ring-accent/10'
         }`}
       >
-        <Icon size={18} color={danger ? '#dc2626' : THEME.clay} />
+        <Icon size={18} color={danger ? THEME.statusError : THEME.ringAccent} />
       </View>
-      <Text className={`flex-1 font-sans text-[15px] font-medium ${danger ? 'text-[#dc2626]' : 'text-ink'}`}>
+      <Text className={`flex-1 font-sans text-[15px] ${danger ? 'text-status-error' : 'text-txt-main'}`}>
         {label}
       </Text>
-      {value && <Text className='mr-2 font-sans text-sm text-ink-light'>{value}</Text>}
-      {onPress && <ChevronRight size={18} color={THEME.inkLight} />}
+      {value && <Text className='mr-2 font-sans text-sm text-txt-body'>{value}</Text>}
+      {onPress && <ChevronRight size={18} color={THEME.textBody} />}
     </TouchableOpacity>
   )
 }
@@ -103,10 +103,10 @@ export default function SettingsScreen() {
 
 
   return (
-    <View className='flex-1 bg-paper'>
+    <View className='flex-1 bg-ring-background'>
       <SafeAreaView className='flex-1' edges={['top']}>
         <View className='flex-row items-center justify-between px-5 pb-2 pt-4'>
-          <Text className='py-2 font-serif text-[28px] font-semibold leading-9 text-ink'>Settings</Text>
+          <Text className='py-2 font-serif-semibold text-[28px] leading-9 text-txt-main'>Settings</Text>
         </View>
 
         <ScrollView
@@ -114,28 +114,28 @@ export default function SettingsScreen() {
           contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100, gap: 24 }}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={THEME.clay} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={THEME.ringAccent} />}
         >
-          <View className='elevation-1 flex-row items-center gap-3.5 rounded-[18px] bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)]'>
-            <View className='h-14 w-14 items-center justify-center rounded-full bg-paper-dark'>
-              <CircleUser size={28} color={THEME.inkMuted} strokeWidth={1.5} />
+          <View className='elevation-1 flex-row items-center gap-3.5 rounded-[18px] border border-ui-border bg-ring-surface p-4 shadow-[0_2px_8px_rgba(30,35,40,0.04)]'>
+            <View className='h-14 w-14 items-center justify-center rounded-full bg-btn-disabled'>
+              <CircleUser size={28} color={THEME.textMuted} strokeWidth={1.5} />
             </View>
             <View className='flex-1 justify-center'>
-              <Text className='font-sans text-base font-semibold text-ink'>
+              <Text className='font-sans-bold text-base text-txt-main'>
                 {profile.email?.split('@')[0] || 'Guest User'}
               </Text>
-              <Text className='mt-0.5 font-sans text-[13px] text-ink-light'>{profile.email || 'Not logged in'}</Text>
+              <Text className='mt-0.5 font-sans text-[13px] text-txt-body'>{profile.email || 'Not logged in'}</Text>
             </View>
-            <TouchableOpacity className='rounded-full bg-paper-dark px-4 py-2'>
-              <Text className='font-sans text-xs font-semibold text-ink'>Edit</Text>
+            <TouchableOpacity className='rounded-full bg-btn-disabled px-4 py-2'>
+              <Text className='font-sans-bold text-xs text-txt-main'>Edit</Text>
             </TouchableOpacity>
           </View>
 
           <View className='gap-2.5'>
-            <Text className='px-1 font-sans text-xs font-semibold uppercase tracking-wide text-ink-light'>
+            <Text className='px-1 font-sans-bold text-xs uppercase tracking-wide text-txt-body'>
               Preferences
             </Text>
-            <View className='overflow-hidden rounded-2xl bg-white'>
+            <View className='overflow-hidden rounded-2xl border border-ui-border bg-ring-surface'>
               <SettingsItem
                 icon={Bell}
                 label='Notifications'
@@ -148,8 +148,8 @@ export default function SettingsScreen() {
 
 
           <View className='gap-2.5'>
-            <Text className='px-1 font-sans text-xs font-semibold uppercase tracking-wide text-ink-light'>Support</Text>
-            <View className='overflow-hidden rounded-2xl bg-white'>
+            <Text className='px-1 font-sans-bold text-xs uppercase tracking-wide text-txt-body'>Support</Text>
+            <View className='overflow-hidden rounded-2xl border border-ui-border bg-ring-surface'>
               <SettingsItem
                 icon={HelpCircle}
                 label='Help Center'
@@ -164,12 +164,12 @@ export default function SettingsScreen() {
           </View>
 
           <View className='mt-2 gap-2.5'>
-            <View className='overflow-hidden rounded-2xl bg-white'>
+            <View className='overflow-hidden rounded-2xl border border-ui-border bg-ring-surface'>
               <SettingsItem icon={LogOut} label='Log Out' danger onPress={handleLogout} />
             </View>
           </View>
 
-          <Text className='mt-2 text-center font-sans text-xs text-ink-light'>BioRing v1.0.0</Text>
+          <Text className='mt-2 text-center font-sans text-xs text-txt-muted'>BioRing v1.0.0</Text>
         </ScrollView>
       </SafeAreaView>
     </View>
