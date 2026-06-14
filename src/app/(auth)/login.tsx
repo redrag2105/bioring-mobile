@@ -80,11 +80,12 @@ export default function LoginScreen() {
   const { signInWithGoogle, isLoading, error } = useGoogleAuth(handleAuthSuccess)
 
   const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle()
-    } catch (err) {
-      Alert.alert('Sign-in failed', 'Unable to sign in with Google. Please try again.')
-    }
+    return router.replace('/(dashboard)' as any);
+    // try {
+    //   await signInWithGoogle()
+    // } catch (err) {
+    //   Alert.alert('Sign-in failed', 'Unable to sign in with Google. Please try again.')
+    // }
   }
 
   // Show error alert when error changes

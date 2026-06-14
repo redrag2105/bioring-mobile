@@ -1,6 +1,8 @@
 import type { LucideIcon } from 'lucide-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated'
+import Animated, { Easing, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
+
+const springConfig = { damping: 14, stiffness: 90, mass: 0.8 }
 
 type TabBarButtonProps = {
   label: string
@@ -38,15 +40,15 @@ export function TabBarButton({ label, focused, icon: Icon, isSticky, onPress }: 
   }))
 
   const labelAnimatedStyle = useAnimatedStyle(() => ({
-    height: withTiming(isSticky ? 0 : 16, { duration: 200, easing: Easing.out(Easing.cubic) }),
-    marginTop: withTiming(isSticky ? 0 : 4, { duration: 200, easing: Easing.out(Easing.cubic) }),
+    height: withSpring(isSticky ? 0 : 16, springConfig),
+    marginTop: withSpring(isSticky ? 0 : 4, springConfig),
     opacity: withTiming(isSticky ? 0 : focused ? 1 : 0.6, { duration: 250, easing: Easing.out(Easing.cubic) }),
     transform: [{ translateY: withTiming(focused ? 0 : 2, { duration: 200, easing: Easing.out(Easing.cubic) }) }]
   }))
 
   return (
     <TouchableOpacity
-      className={`flex-1 items-center justify-center ${isSticky ? 'py-0.5' : 'py-1'}`}
+      className={`flex-1 items-center justify-start pt-2`}
       onPress={onPress}
       activeOpacity={0.75}
     >

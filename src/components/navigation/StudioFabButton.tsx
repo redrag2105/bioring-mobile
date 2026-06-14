@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import Animated, { 
-  useAnimatedStyle, 
-  withTiming, 
-  withRepeat, 
-  withSequence, 
-  useSharedValue, 
-  Easing
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming
 } from 'react-native-reanimated'
-import Svg, { Circle, Line, Path, Defs, RadialGradient, Stop } from 'react-native-svg'
+import Svg, { Circle, Defs, Line, Path, RadialGradient, Stop } from 'react-native-svg'
 
 import { THEME } from '@/constants/theme'
 
@@ -57,7 +58,7 @@ function SoundwaveRing({ active }: { active: boolean }) {
       rotation.value = withTiming(0, { duration: 500 })
       breathing.value = withTiming(1, { duration: 500 })
     }
-  }, [active])
+  }, [active, rotation, breathing])
 
   const animatedWaveStyle = useAnimatedStyle(() => ({
     transform: [
@@ -124,47 +125,75 @@ function SoundwaveRing({ active }: { active: boolean }) {
 }
 
 function FingerprintIcon({ active }: { active: boolean }) {
-  const accent = active ? THEME.ringAccent : THEME.ringPrimary
-  
+  const accent = active ? THEME.ringAccent : THEME.ringPrimary;
+
   const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(active ? 1.05 : 1, { duration: 300, easing: Easing.out(Easing.back(1.5)) }) }]
-  }))
+    transform: [
+      { 
+        scale: withTiming(active ? 1.06 : 1, { 
+          duration: 300, 
+          easing: Easing.out(Easing.back(1.5)) 
+        }) 
+      }
+    ]
+  }));
+
+  const strokeProps = {
+    stroke: accent,
+    strokeWidth: active ? 2 : 1.8,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    fill: "none"
+  };
 
   return (
     <Animated.View style={iconStyle}>
-      <Svg width={24} height={24} viewBox='0 0 30 30'> 
-        {/* Tăng nhẹ icon lên 24 */}
-        <Path d='M8.2 13.8c.1-3.9 3.1-6.5 6.8-6.5 3.8 0 6.8 2.8 6.8 6.7' stroke={accent} strokeWidth={1.5} strokeLinecap='round' fill='none' />
-        <Path d='M6.1 16.5v-2.2C6.1 9.2 10 5.5 15 5.5s8.9 3.8 8.9 8.9v1.8' stroke={accent} strokeOpacity={active ? 0.7 : 0.4} strokeWidth={1.2} strokeLinecap='round' fill='none' />
-        <Path d='M10.5 15.5c0-2.8 1.9-4.8 4.5-4.8s4.5 2 4.5 4.8c0 5.2-1.8 7.5-4.7 9.4' stroke={accent} strokeWidth={1.5} strokeLinecap='round' fill='none' />
-        <Path d='M13 15.6c0-1.3.8-2.2 2-2.2s2 .9 2 2.2c0 3.7-1.1 5.4-3.4 7.1' stroke={accent} strokeOpacity={active ? 0.9 : 0.5} strokeWidth={1.2} strokeLinecap='round' fill='none' />
-        <Path d='M8.6 19.3c.4 1.7 1.3 3 2.8 4M21.5 19.8c-.6 2.3-1.8 4.1-3.6 5.6' stroke={accent} strokeOpacity={active ? 0.6 : 0.3} strokeWidth={1.2} strokeLinecap='round' fill='none' />
+      <Svg width={24} height={24} viewBox="0 0 24 24">
+        
+        <Path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" {...strokeProps} strokeOpacity={active ? 1 : 0.6} />
+        <Path d="M14 13.12c0 2.38 0 6.38-1 8.88" {...strokeProps} strokeOpacity={active ? 1 : 0.6} />
+
+        <Path d="M9 6.8a6 6 0 0 1 9 5.2v2" {...strokeProps} strokeOpacity={active ? 0.85 : 0.5} />
+        <Path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" {...strokeProps} strokeOpacity={active ? 0.85 : 0.5} />
+
+        <Path d="M2 12a10 10 0 0 1 18-6" {...strokeProps} strokeOpacity={active ? 0.65 : 0.4} />
+        <Path d="M21.8 16c.2-2 .131-5.354 0-6" {...strokeProps} strokeOpacity={active ? 0.65 : 0.4} />
+
+        <Path d="M17.29 21.02c.12-.6.43-2.3.5-3.02" {...strokeProps} strokeOpacity={active ? 0.45 : 0.25} />
+        <Path d="M8.65 22c.21-.66.45-1.32.57-2" {...strokeProps} strokeOpacity={active ? 0.45 : 0.25} />
+        <Path d="M2 16h.01" {...strokeProps} strokeOpacity={active ? 0.45 : 0.25} />
+        
       </Svg>
     </Animated.View>
-  )
+  );
 }
 
 
 export function StudioFabButton({ focused, isSticky, onPress }: StudioFabButtonProps) {
-  const fabAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withTiming(focused ? 1 : 0.95, { duration: 300, easing: Easing.out(Easing.exp) }) }
-    ],
-    shadowColor: THEME.ringAccent,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: withTiming(focused ? 0.25 : 0.08, { duration: 300 }),
-    shadowRadius: withTiming(focused ? 10 : 4, { duration: 300 }),
-    elevation: focused ? 6 : 2
-  }))
+  const fabAnimatedStyle = useAnimatedStyle(() => {
+    const topOffset = -32 
+
+    return {
+      top: withSpring(topOffset, { damping: 14, stiffness: 90, mass: 0.8 }),
+      transform: [
+        { scale: withTiming(focused ? 1 : 0.95, { duration: 300, easing: Easing.out(Easing.exp) }) }
+      ],
+      shadowColor: THEME.ringAccent,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: withTiming(focused ? 0.25 : 0.08, { duration: 300 }),
+      shadowRadius: withTiming(focused ? 10 : 4, { duration: 300 }),
+      elevation: focused ? 6 : 2
+    }
+  })
 
   return (
     <TouchableOpacity
-      className={`flex-1 items-center justify-center pt-1`}
+      className={`flex-1 items-center justify-start pt-2`}
       onPress={onPress}
       activeOpacity={0.8}
     >
       <Animated.View
-        className='absolute top-[-26px] h-[64px] w-[64px] items-center justify-center rounded-full bg-ring-surface'
+        className='absolute h-[64px] w-[64px] items-center justify-center rounded-full bg-ring-surface'
         style={[
           { zIndex: 10 },
           fabAnimatedStyle
