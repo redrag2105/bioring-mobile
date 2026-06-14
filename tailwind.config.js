@@ -40,6 +40,9 @@ module.exports = {
         ui: {
           border: '#E6E4E0',
         },
+        border: {
+          light: '#E6E4E0',
+        },
         status: {
           error: '#A85A54',
           success: '#4A6B5C',

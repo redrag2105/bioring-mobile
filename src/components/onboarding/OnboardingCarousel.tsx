@@ -1,16 +1,16 @@
-import { FONTS, THEME } from '@/constants/theme'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowRight } from 'lucide-react-native'
-import React, { useCallback, useRef, useState } from 'react'
+import { cssInterop } from 'nativewind'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   FlatList,
   ImageSourcePropType,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  PixelRatio,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -24,11 +24,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue
 } from 'react-native-reanimated'
-import Svg, { Path } from 'react-native-svg'
 
 const EDITORIAL_BLACK = '#1A1A1A'
-const BODY_GRAY = '#666666'
-const GOOGLE_BORDER = 'rgba(26, 26, 26, 0.2)'
+const RING_BACKGROUND = '#F8F7F5'
+const HAIRLINE_WIDTH = 1 / PixelRatio.get()
+
+cssInterop(Image, { className: 'style' })
+cssInterop(LinearGradient, { className: 'style' })
 
 interface OnboardingSlide {
   id: string
@@ -60,11 +62,11 @@ const SLIDES: OnboardingSlide[] = [
 
 interface OnboardingScreenProps {
   onSkip: () => void
-  onContinueWithGoogle: () => void | Promise<void>
-  isGoogleLoading?: boolean
+  onStartNow: () => void | Promise<void>
+  isLoading?: boolean
 }
 
-export function OnboardingScreen({ onSkip, onContinueWithGoogle, isGoogleLoading = false }: OnboardingScreenProps) {
+export function OnboardingScreen({ onSkip, onStartNow, isLoading = false }: OnboardingScreenProps) {
   const { width, height } = useWindowDimensions()
   const [currentIndex, setCurrentIndex] = useState(0)
   const flatListRef = useRef<FlatList<OnboardingSlide>>(null)
@@ -92,38 +94,83 @@ export function OnboardingScreen({ onSkip, onContinueWithGoogle, isGoogleLoading
     }
   }, [currentIndex, isLastSlide])
 
-  const renderSlide = useCallback(
-    ({ item, index }: { item: OnboardingSlide; index: number }) => (
-      <SlideItem item={item} index={index} scrollX={scrollX} width={width} height={height} />
-    ),
-    [height, scrollX, width]
-  )
+  // --- THÊM TÍNH NĂNG AUTO PLAY Ở ĐÂY ---
+  useEffect(() => {
+    // Dừng auto-play nếu đang ở slide cuối cùng
+    if (isLastSlide) return
+
+    // Thiết lập bộ đếm thời gian 5 giây
+    const timer = setInterval(() => {
+      flatListRef.current?.scrollToIndex({ 
+        index: currentIndex + 1, 
+        animated: true 
+      })
+    }, 5000)
+
+    // Xóa bộ đếm nếu người dùng tự vuốt (currentIndex thay đổi) hoặc component unmount
+    return () => clearInterval(timer)
+  }, [currentIndex, isLastSlide])
+  // ----------------------------------------
+
+  const skipAnimatedStyle = useAnimatedStyle(() => {
+    const lastSlideOffset = width * (SLIDES.length - 1)
+    const fadeStartOffset = lastSlideOffset - width * 0.5
+    const opacity = interpolate(scrollX.value, [0, fadeStartOffset, lastSlideOffset], [1, 1, 0], Extrapolate.CLAMP)
+
+    return { opacity }
+  })
 
   return (
-    <View style={styles.screen}>
+    <View className='flex-1 bg-ring-background'>
       <StatusBar translucent backgroundColor='transparent' barStyle='dark-content' />
 
       <LinearGradient
         pointerEvents='none'
         colors={['rgba(0,0,0,0.52)', 'rgba(0,0,0,0.18)', 'rgba(0,0,0,0)']}
         locations={[0, 0.55, 1]}
-        style={styles.topImageGradient}
+        className='absolute left-0 right-0 top-0 z-[18] h-[180px]'
       />
 
-      <View style={styles.brandHeader} pointerEvents='none'>
-        <Text style={styles.brandText}>BIORING</Text>
+      <View className='absolute left-0 right-0 top-[48px] z-[24] items-center' pointerEvents='none'>
+        <View
+          className='rounded-full border border-black/10 bg-white/75 px-6 py-2.5'
+          style={{
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2
+          }}
+        >
+          <Text className='font-serif text-base tracking-[5px] text-[#1A1A1A]'>BIORING</Text>
+        </View>
       </View>
 
-      {!isLastSlide && (
-        <TouchableOpacity style={styles.skipButton} onPress={onSkip} activeOpacity={0.68}>
-          <Text style={styles.skipText}>SKIP</Text>
+      <Animated.View
+        className='absolute right-6 top-[45px] z-[30]'
+        pointerEvents={isLastSlide ? 'none' : 'auto'}
+        style={skipAnimatedStyle}
+      >
+        <TouchableOpacity className='px-1.5 py-1.5' onPress={onSkip} activeOpacity={0.68}>
+          <Text
+            className='font-sans-bold text-2xs tracking-[2px] text-[#ffffffeb]'
+            style={{
+              textShadowColor: 'rgba(0, 0, 0, 0.28)',
+              textShadowOffset: { width: 0, height: 1 },
+              textShadowRadius: 5
+            }}
+          >
+            SKIP
+          </Text>
         </TouchableOpacity>
-      )}
+      </Animated.View>
 
       <FlatList
         ref={flatListRef}
         data={SLIDES}
-        renderItem={renderSlide}
+        renderItem={({ item, index }) => (
+          <SlideItem item={item} index={index} scrollX={scrollX} width={width} height={height} />
+        )}
         keyExtractor={(item) => item.id}
         horizontal
         pagingEnabled
@@ -140,14 +187,17 @@ export function OnboardingScreen({ onSkip, onContinueWithGoogle, isGoogleLoading
         })}
       />
 
-      <View style={styles.footer}>
+      <View className='absolute bottom-8 left-0 right-0 items-center px-8'>
         <Indicator scrollX={scrollX} slideWidth={width} slideCount={SLIDES.length} />
 
         <NavigationAction
           isLastSlide={isLastSlide}
-          isGoogleLoading={isGoogleLoading}
+          isLoading={isLoading}
           onNext={goToNext}
-          onContinueWithGoogle={onContinueWithGoogle}
+          onStartNow={onStartNow}
+          scrollX={scrollX}
+          slideWidth={width}
+          slideCount={SLIDES.length}
         />
       </View>
     </View>
@@ -178,26 +228,31 @@ function SlideItem({ item, index, scrollX, width, height }: SlideItemProps) {
   })
 
   return (
-    <View style={[styles.slide, { width }]}>
-      <View style={[styles.imageRegion, { height: imageHeight, width }]}>
+    <View className='flex-1 bg-ring-background' style={{ width }}>
+      <View className='overflow-hidden bg-ring-surface' style={{ height: imageHeight, width }}>
         <Image
           source={item.image}
-          style={StyleSheet.absoluteFill}
+          className='absolute inset-0'
           contentFit='cover'
           transition={450}
           cachePolicy='memory-disk'
         />
         <LinearGradient
           pointerEvents='none'
-          colors={['rgba(248,247,245,0)', THEME.ringBackground]}
+          colors={['rgba(248,247,245,0)', RING_BACKGROUND]}
           locations={[0, 1]}
-          style={[styles.imageGradient, { height: gradientHeight }]}
+          className='absolute bottom-0 left-0 right-0'
+          style={{ height: gradientHeight }}
         />
       </View>
 
-      <Animated.View style={[styles.copyRegion, copyAnimatedStyle]}>
-        <Text style={styles.heading}>{item.heading}</Text>
-        <Text style={styles.body}>{item.body}</Text>
+      <Animated.View className='h-[40%] items-center px-[34px] pt-[34px]' style={copyAnimatedStyle}>
+        <Text className='max-w-[310px] text-center font-serif text-[26px] leading-[34px] tracking-[1px] text-[#1A1A1A]'>
+          {item.heading}
+        </Text>
+        <Text className='mt-[18px] max-w-[300px] text-center font-sans text-sm leading-6 text-[#666666]'>
+          {item.body}
+        </Text>
       </Animated.View>
     </View>
   )
@@ -226,216 +281,89 @@ function Indicator({ scrollX, slideWidth, slideCount }: IndicatorProps) {
   })
 
   return (
-    <View style={styles.indicatorTrack}>
-      <Animated.View style={[styles.indicatorFill, animatedStyle]} />
+    <View className='h-px w-[82px] overflow-hidden bg-ring-accent/25'>
+      <Animated.View className='h-px bg-ring-accent' style={animatedStyle} />
     </View>
   )
 }
 
 interface NavigationActionProps {
   isLastSlide: boolean
-  isGoogleLoading: boolean
+  isLoading: boolean
   onNext: () => void
-  onContinueWithGoogle: () => void | Promise<void>
+  onStartNow: () => void | Promise<void>
+  scrollX: SharedValue<number>
+  slideWidth: number
+  slideCount: number
 }
 
 function NavigationAction({
   isLastSlide,
-  isGoogleLoading,
+  isLoading,
   onNext,
-  onContinueWithGoogle
+  onStartNow,
+  scrollX,
+  slideWidth,
+  slideCount
 }: NavigationActionProps) {
-  if (isLastSlide) {
-    return (
-      <TouchableOpacity
-        style={styles.googleButton}
-        onPress={onContinueWithGoogle}
-        activeOpacity={0.82}
-        disabled={isGoogleLoading}
+  
+  const nextAnimatedStyle = useAnimatedStyle(() => {
+    const lastSlideOffset = slideWidth * (slideCount - 1)
+    const fadeStartOffset = lastSlideOffset - slideWidth * 0.5
+    const opacity = interpolate(scrollX.value, [0, fadeStartOffset, lastSlideOffset], [1, 1, 0], Extrapolate.CLAMP)
+
+    return { opacity }
+  })
+
+  const startNowAnimatedStyle = useAnimatedStyle(() => {
+    const lastSlideOffset = slideWidth * (slideCount - 1)
+    const fadeStartOffset = lastSlideOffset - slideWidth * 0.5
+    const opacity = interpolate(scrollX.value, [fadeStartOffset, lastSlideOffset], [0, 1], Extrapolate.CLAMP)
+
+    return { opacity }
+  })
+
+  return (
+    <View className='relative mt-[22px] h-[52px] w-full items-center'>
+      <Animated.View
+        className='absolute top-0 w-full max-w-[326px]'
+        pointerEvents={isLastSlide ? 'auto' : 'none'}
+        style={startNowAnimatedStyle}
       >
-        {isGoogleLoading ? (
-          <ActivityIndicator color={EDITORIAL_BLACK} />
-        ) : (
-          <View style={styles.googleButtonContent}>
-            <GoogleMonochromeIcon size={15} color={EDITORIAL_BLACK} />
-            <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    )
-  }
+        <TouchableOpacity
+          className='h-[52px] w-full items-center justify-center rounded-full border-[rgba(26,26,26,0.2)] bg-ring-background'
+          style={{
+            borderWidth: HAIRLINE_WIDTH,
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.06, 
+            shadowRadius: 10,
+            elevation: 2 
+          }}
+          onPress={onStartNow}
+          activeOpacity={0.82}
+          disabled={!isLastSlide || isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color={EDITORIAL_BLACK} />
+          ) : (
+            <Text className='font-sans-bold text-xs tracking-[1.5px] text-[#1A1A1A]'>START NOW</Text>
+          )}
+        </TouchableOpacity>
+      </Animated.View>
 
-  return (
-    <TouchableOpacity style={styles.nextButton} onPress={onNext} activeOpacity={0.7}>
-      <Text style={styles.nextText}>NEXT</Text>
-      <ArrowRight size={15} color={EDITORIAL_BLACK} strokeWidth={1} />
-    </TouchableOpacity>
+      <Animated.View
+        className='absolute top-0'
+        style={[{ marginTop: 2 }, nextAnimatedStyle]}
+        pointerEvents={isLastSlide ? 'none' : 'auto'}
+      >
+        <TouchableOpacity className='flex-row items-center gap-[9px] px-3 py-2' onPress={onNext} activeOpacity={0.7}>
+          <Text className='font-sans text-[11px] tracking-[2.4px] text-[#1A1A1A]'>NEXT</Text>
+          <ArrowRight size={15} color={EDITORIAL_BLACK} strokeWidth={1} />
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
   )
 }
-
-function GoogleMonochromeIcon({ size, color }: { size: number; color: string }) {
-  return (
-    <Svg width={size} height={size} viewBox='0 0 24 24' fill='none'>
-      <Path
-        d='M21.6 12.23c0-.72-.06-1.25-.18-1.79H12v3.48h5.53c-.11.87-.71 2.18-2.04 3.06l-.02.12 2.96 2.16.2.02c1.82-1.58 2.87-3.91 2.87-7.05Z'
-        fill={color}
-      />
-      <Path
-        d='M12 22c2.6 0 4.78-.8 6.37-2.19l-3.03-2.26c-.81.53-1.9.9-3.34.9-2.54 0-4.7-1.58-5.47-3.77l-.12.01-3.07 2.23-.04.1C4.88 19.98 8.17 22 12 22Z'
-        fill={color}
-      />
-      <Path
-        d='M6.53 14.68A5.84 5.84 0 0 1 6.2 12c0-.93.17-1.83.32-2.68l-.01-.18-3.1-2.26-.1.04A9.58 9.58 0 0 0 2 12c0 1.83.47 3.55 1.3 5.02l3.23-2.34Z'
-        fill={color}
-      />
-      <Path
-        d='M12 5.55c1.8 0 3.02.73 3.72 1.34l2.71-2.49C16.77 2.95 14.6 2 12 2 8.17 2 4.88 4.02 3.3 6.92l3.22 2.4C7.3 7.13 9.46 5.55 12 5.55Z'
-        fill={color}
-      />
-    </Svg>
-  )
-}
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: THEME.ringBackground
-  },
-  brandHeader: {
-    position: 'absolute',
-    top: 48,
-    left: 0,
-    right: 0,
-    zIndex: 24,
-    alignItems: 'center'
-  },
-  brandText: {
-    color: THEME.textInverse,
-    fontFamily: FONTS.serif,
-    fontSize: 16,
-    letterSpacing: 5,
-    textShadowColor: 'rgba(0, 0, 0, 0.72)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 12
-  },
-  topImageGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 180,
-    zIndex: 18
-  },
-  skipButton: {
-    position: 'absolute',
-    top: 45,
-    right: 24,
-    zIndex: 30,
-    paddingHorizontal: 6,
-    paddingVertical: 6
-  },
-  skipText: {
-    color: 'rgba(255, 255, 255, 0.92)',
-    fontFamily: FONTS.sansBold,
-    fontSize: 10,
-    letterSpacing: 2,
-    textShadowColor: 'rgba(0, 0, 0, 0.28)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 5
-  },
-  slide: {
-    flex: 1,
-    backgroundColor: THEME.ringBackground
-  },
-  imageRegion: {
-    overflow: 'hidden',
-    backgroundColor: THEME.ringSurface
-  },
-  imageGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0
-  },
-  copyRegion: {
-    height: '40%',
-    alignItems: 'center',
-    paddingHorizontal: 34,
-    paddingTop: 34
-  },
-  heading: {
-    maxWidth: 310,
-    color: EDITORIAL_BLACK,
-    fontFamily: FONTS.serif,
-    fontSize: 26,
-    letterSpacing: 1,
-    lineHeight: 34,
-    textAlign: 'center'
-  },
-  body: {
-    maxWidth: 300,
-    marginTop: 18,
-    color: BODY_GRAY,
-    fontFamily: FONTS.sans,
-    fontSize: 14,
-    lineHeight: 24,
-    textAlign: 'center'
-  },
-  footer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 32,
-    alignItems: 'center',
-    paddingHorizontal: 32
-  },
-  indicatorTrack: {
-    width: 82,
-    height: 1,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(182, 155, 122, 0.25)'
-  },
-  indicatorFill: {
-    height: 1,
-    backgroundColor: THEME.ringAccent
-  },
-  nextButton: {
-    marginTop: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 9,
-    paddingHorizontal: 12,
-    paddingVertical: 8
-  },
-  nextText: {
-    color: EDITORIAL_BLACK,
-    fontFamily: FONTS.sans,
-    fontSize: 11,
-    letterSpacing: 2.4
-  },
-  googleButton: {
-    width: '100%',
-    maxWidth: 326,
-    height: 52,
-    marginTop: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: GOOGLE_BORDER,
-    borderRadius: 999
-  },
-  googleButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10
-  },
-  googleButtonText: {
-    color: EDITORIAL_BLACK,
-    fontFamily: FONTS.sansBold,
-    fontSize: 12,
-    letterSpacing: 1.5
-  }
-})
 
 export const OnboardingCarousel = OnboardingScreen

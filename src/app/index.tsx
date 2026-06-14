@@ -27,18 +27,17 @@ export default function WelcomeScreen() {
     router.replace('/(auth)/login')
   }, [completeOnboarding, router])
 
-  const handleContinueToLogin = useCallback(async () => {
-    await completeOnboarding()
+  const handleContinueToLogin = useCallback(() => {
     router.replace('/(auth)/login')
-  }, [completeOnboarding, router])
+  }, [router])
 
   return (
     <View className='flex-1 bg-ring-background'>
       <StatusBar style='dark' translucent backgroundColor='transparent' />
       <OnboardingScreen
         onSkip={handleSkip}
-        onContinueWithGoogle={handleContinueToLogin}
-        isGoogleLoading={isLoading}
+        onStartNow={handleContinueToLogin}
+        isLoading={isLoading}
       />
     </View>
   )
