@@ -1,6 +1,7 @@
 import { ScreenHeader } from '@/components/screen/ScreenHeader'
 import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
 import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
+import { useResetTabOnBlur } from '@/hooks/useResetTabOnBlur'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -8,6 +9,7 @@ const MEMORY_ROWS = ['Fingerprint card', 'Heartbeat card', 'Anniversary note']
 
 export function MemoryScreen() {
   const handleScroll = useDynamicBottomTab()
+  const { resetKey, scrollRef } = useResetTabOnBlur()
 
   return (
     <View className='flex-1 bg-ring-background'>
@@ -15,6 +17,8 @@ export function MemoryScreen() {
         <ScreenHeader eyebrow='The ky niem' title='Memory' accent='Cards' />
 
         <ScrollView
+          ref={scrollRef}
+          key={resetKey}
           showsVerticalScrollIndicator={false}
           className='flex-1'
           onScroll={handleScroll}

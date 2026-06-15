@@ -8,7 +8,8 @@ export default function DashboardLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'none',
-        lazy: true
+        lazy: true,
+        popToTopOnBlur: true
       }}
     >
       <Tabs.Screen

@@ -21,7 +21,7 @@ export const THEME = {
   borderLight: '#E6E4E0',
 
   statusError: '#A85A54',
-  statusSuccess: '#4A6B5C'
+  statusSuccess: '#4A6B5C',
 } as const
 
 export const FONTS = {
@@ -31,7 +31,7 @@ export const FONTS = {
   serifSemibold: Platform.select({ ios: 'Gretha-Medium', android: 'Gretha-Medium', default: 'Gretha-Medium' }),
   serifBold: Platform.select({ ios: 'Gretha-Bold', android: 'Gretha-Bold', default: 'Gretha-Bold' }),
   sans: Platform.select({ ios: 'Lato', android: 'Lato', default: 'Lato' }),
-  sansBold: Platform.select({ ios: 'Lato-Bold', android: 'Lato-Bold', default: 'Lato-Bold' })
+  sansBold: Platform.select({ ios: 'Lato-Bold', android: 'Lato-Bold', default: 'Lato-Bold' }),
 } as const
 
 export type ThemeColors = keyof typeof THEME

@@ -1,10 +1,12 @@
 import { logout } from '@/core/apis/auth.api'
 import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
+import { useResetTabOnBlur } from '@/hooks/useResetTabOnBlur'
+import { useFocusEffect } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { Bell, ChevronRight, CircleUser, HelpCircle, LogOut, Moon, Shield, type LucideIcon } from 'lucide-react-native'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Alert, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -41,6 +43,11 @@ export function ProfileScreen() {
   const handleScroll = useDynamicBottomTab()
   const [profile, setProfile] = useState<{ email?: string; id?: string }>({})
   const [refreshing, setRefreshing] = useState(false)
+  const resetProfileState = useCallback(() => {
+    setProfile({})
+    setRefreshing(false)
+  }, [])
+  const { resetKey, scrollRef } = useResetTabOnBlur({ onReset: resetProfileState })
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -48,8 +55,9 @@ export function ProfileScreen() {
     setRefreshing(false)
   }, [queryClient])
 
-  useEffect(() => {
-    const loadProfile = async () => {
+  useFocusEffect(
+    useCallback(() => {
+      const loadProfile = async () => {
       try {
         const token = await SecureStore.getItemAsync('access_token')
 
@@ -66,8 +74,9 @@ export function ProfileScreen() {
       }
     }
 
-    loadProfile()
-  }, [])
+      loadProfile()
+    }, [])
+  )
 
   const handleLogout = () => {
     Alert.alert('Log out', 'Are you sure you want to log out of BioRing?', [
@@ -99,6 +108,8 @@ export function ProfileScreen() {
         </View>
 
         <ScrollView
+          ref={scrollRef}
+          key={resetKey}
           showsVerticalScrollIndicator={false}
           className='flex-1'
           onScroll={handleScroll}
