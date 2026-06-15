@@ -119,7 +119,7 @@ export const STUDIO_SIZE_GUIDE_ENTRY = {
   eyebrow: 'Ring Size',
   title: 'How to Measure Ring Size',
   description: 'Quickly measure at home with a ruler before personalizing your BioRing.',
-  buttonLabel: 'View Guide'
+  buttonLabel: 'Measure Manually'
 } as const
 
 export const STUDIO_SIZE_GUIDE_STEPS = [
@@ -162,28 +162,29 @@ export const STUDIO_DIRECT_MEASURE = {
   infoTitle: 'How to align correctly',
   infoDescription:
     'Keep your phone flat on a table, look straight down from above, and align the widest part of your finger with the glowing guide. Avoid viewing from an angle because parallax can make the measurement look smaller or larger.',
-  resultButton: 'Get the ring size',
-  savedLabel: 'Saved to current draft'
 } as const
 
 export const STUDIO_MEASURE_OPTIONS = [
-  { mm: 44, size: 'Size 3', diameter: '14.0 mm', fingerWidthClass: 'w-[70px]' },
-  { mm: 45, size: 'Size 3.25', diameter: '14.3 mm', fingerWidthClass: 'w-[72px]' },
-  { mm: 46, size: 'Size 3.5', diameter: '14.6 mm', fingerWidthClass: 'w-[73px]' },
-  { mm: 47, size: 'Size 3.75', diameter: '15.0 mm', fingerWidthClass: 'w-[75px]' },
-  { mm: 48, size: 'Size 4', diameter: '15.3 mm', fingerWidthClass: 'w-[76px]' },
-  { mm: 49, size: 'Size 4.5', diameter: '15.6 mm', fingerWidthClass: 'w-[78px]' },
-  { mm: 50, size: 'Size 5', diameter: '15.9 mm', fingerWidthClass: 'w-[79px]' },
-  { mm: 51, size: 'Size 5.5', diameter: '16.2 mm', fingerWidthClass: 'w-[81px]' },
-  { mm: 52, size: 'Size 6', diameter: '16.6 mm', fingerWidthClass: 'w-[82px]' },
-  { mm: 53, size: 'Size 6.5', diameter: '16.9 mm', fingerWidthClass: 'w-[84px]' },
-  { mm: 54, size: 'Size 7', diameter: '17.2 mm', fingerWidthClass: 'w-[86px]' },
-  { mm: 55, size: 'Size 7.25', diameter: '17.5 mm', fingerWidthClass: 'w-[87px]' },
-  { mm: 56, size: 'Size 7.5', diameter: '17.8 mm', fingerWidthClass: 'w-[89px]' },
-  { mm: 57, size: 'Size 7.75', diameter: '18.1 mm', fingerWidthClass: 'w-[90px]' },
-  { mm: 58, size: 'Size 8', diameter: '18.5 mm', fingerWidthClass: 'w-[92px]' },
-  { mm: 59, size: 'Size 8.5', diameter: '18.8 mm', fingerWidthClass: 'w-[94px]' },
-  { mm: 60, size: 'Size 9', diameter: '19.1 mm', fingerWidthClass: 'w-[95px]' },
-  { mm: 61, size: 'Size 9.5', diameter: '19.4 mm', fingerWidthClass: 'w-[97px]' },
-  { mm: 62, size: 'Size 10', diameter: '19.7 mm', fingerWidthClass: 'w-[98px]' }
+  // Đoạn nhỏ (Size < 6 PNJ) thường là tay trẻ em hoặc tay cực nhỏ
+  { mm: 44, size: 'Size 4', diameter: '14.0 mm', fingerWidthClass: 'w-[70px]' },
+  { mm: 45, size: 'Size 5', diameter: '14.3 mm', fingerWidthClass: 'w-[72px]' },
+
+  // Bắt đầu chuẩn PNJ
+  { mm: 46, size: 'Size 6', diameter: '14.7 mm', fingerWidthClass: 'w-[73px]' },
+  { mm: 47, size: 'Size 7', diameter: '15.0 mm', fingerWidthClass: 'w-[75px]' },
+  { mm: 48, size: 'Size 7.5', diameter: '15.3 mm', fingerWidthClass: 'w-[76px]' },
+  { mm: 49, size: 'Size 8', diameter: '15.6 mm', fingerWidthClass: 'w-[78px]' }, // Gần 15.5mm
+  { mm: 50, size: 'Size 9', diameter: '16.0 mm', fingerWidthClass: 'w-[80px]' }, // Đã chỉnh class cho tròn 5x
+  { mm: 51, size: 'Size 9.5', diameter: '16.2 mm', fingerWidthClass: 'w-[81px]' },
+  { mm: 52, size: 'Size 10', diameter: '16.5 mm', fingerWidthClass: 'w-[83px]' },
+  { mm: 53, size: 'Size 11', diameter: '16.8 mm', fingerWidthClass: 'w-[84px]' }, // Gần 16.7mm
+  { mm: 54, size: 'Size 12', diameter: '17.2 mm', fingerWidthClass: 'w-[86px]' }, // Gần 17.0mm
+  { mm: 55, size: 'Size 13', diameter: '17.5 mm', fingerWidthClass: 'w-[88px]' },
+  { mm: 56, size: 'Size 14', diameter: '17.8 mm', fingerWidthClass: 'w-[89px]' }, // Gần 17.7mm
+  { mm: 57, size: 'Size 15', diameter: '18.1 mm', fingerWidthClass: 'w-[91px]' }, // Gần 18.0mm
+  { mm: 58, size: 'Size 16', diameter: '18.5 mm', fingerWidthClass: 'w-[93px]' },
+  { mm: 59, size: 'Size 17', diameter: '18.8 mm', fingerWidthClass: 'w-[94px]' }, // Gần 19.0mm
+  { mm: 60, size: 'Size 18', diameter: '19.1 mm', fingerWidthClass: 'w-[96px]' }, // Gần 19.5mm
+  { mm: 61, size: 'Size 19', diameter: '19.4 mm', fingerWidthClass: 'w-[97px]' }, // Gần 20.0mm
+  { mm: 62, size: 'Size 20', diameter: '19.7 mm', fingerWidthClass: 'w-[99px]' } // Gần 20.3mm
 ] as const

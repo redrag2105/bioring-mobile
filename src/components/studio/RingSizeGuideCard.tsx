@@ -141,7 +141,9 @@ export function RingSizeGuideCard() {
           onPress={handleOpenGuide}
           className='flex-1 items-center justify-center rounded-full border-[0.5px] border-ring-primary/40 bg-transparent py-3.5 shadow-sm shadow-black/5 active:opacity-70'
         >
-          <Text className='font-sans-medium text-[11px] uppercase tracking-wider text-ring-primary'>View Guide</Text>
+          <Text className='font-sans-medium text-[11px] uppercase tracking-wider text-ring-primary'>
+            Measure Manually
+          </Text>
         </Pressable>
 
         <Pressable
