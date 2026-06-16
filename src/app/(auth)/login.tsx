@@ -74,13 +74,13 @@ export default function LoginScreen() {
 
   const handleAuthSuccess = (token: string) => {
     console.log('Authentication successful!')
-    router.replace('/(dashboard)' as any)
+    router.replace('/post-login-setup' as any)
   }
 
   const { signInWithGoogle, isLoading, error } = useGoogleAuth(handleAuthSuccess)
 
   const handleGoogleSignIn = async () => {
-    return router.replace('/(dashboard)' as any);
+    return router.replace('/post-login-setup' as any);
     // try {
     //   await signInWithGoogle()
     // } catch (err) {
