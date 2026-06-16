@@ -1,10 +1,12 @@
 import '@/global.css'
+import { useFonts } from 'expo-font'
 import * as Linking from 'expo-linking'
-import { Stack, useRouter, useSegments } from 'expo-router'
+import { router, Stack, useRootNavigationState } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
 
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
@@ -12,16 +14,23 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export { ErrorBoundary } from 'expo-router'
 
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false
+})
+
 /**
  * Hook to handle authentication deeplinks at the app level
  * This ensures tokens are captured even when the app is not on the login screen
  */
-function useAuthDeepLinkHandler() {
-  const router = useRouter()
-  const segments = useSegments()
+function useAuthDeepLinkHandler(enabled: boolean) {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
+    if (!enabled) {
+      return
+    }
+
     const handleDeepLink = async (event: { url: string }) => {
       const { url } = event
       const parsed = Linking.parse(url)
@@ -63,7 +72,7 @@ function useAuthDeepLinkHandler() {
     return () => {
       subscription.remove()
     }
-  }, [router])
+  }, [enabled])
 
   return isReady
 }
@@ -78,7 +87,18 @@ const queryClient = new QueryClient({
 })
 
 export default function RootLayout() {
-  useAuthDeepLinkHandler()
+  const rootNavigationState = useRootNavigationState()
+  const [fontsLoaded] = useFonts({
+    'Gretha-Regular': require('../assets/fonts/Gretha Regular.ttf'),
+    'Gretha-Medium': require('../assets/fonts/Gretha Medium.ttf'),
+    'Gretha-Bold': require('../assets/fonts/Gretha Bold.ttf'),
+    'Gretha-SemiBoldItalic': require('../assets/fonts/Gretha-SemiBoldItalic.otf')
+  })
+  useAuthDeepLinkHandler(fontsLoaded && Boolean(rootNavigationState?.key))
+
+  if (!fontsLoaded) {
+    return null
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -90,6 +110,8 @@ export default function RootLayout() {
               <Stack.Screen name='index' />
               <Stack.Screen name='(auth)' />
               <Stack.Screen name='(dashboard)' />
+              <Stack.Screen name='studio-size-guide' />
+              <Stack.Screen name='studio-measure-now' />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
