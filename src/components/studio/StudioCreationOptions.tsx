@@ -6,16 +6,16 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-  Easing,
-  cancelAnimation,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withSpring,
-  withTiming
+    Easing,
+    cancelAnimation,
+    interpolate,
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withSequence,
+    withSpring,
+    withTiming
 } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
@@ -77,7 +77,7 @@ export function StudioCreationOptions() {
       bottomContentOpacity.value = withTiming(0, { duration: 350 })
       splitY.value = withTiming(TOTAL_HEIGHT, timingConfig)
       setTimeout(() => {
-        router.push('/collections-canvas' as never)
+        router.push('/collections' as never)
         resetState()
       }, 1000)
     } else {

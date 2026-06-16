@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router'
-import { ArrowLeft, Ruler, Sparkles } from 'lucide-react-native'
+import { ArrowLeft, Flame, Ruler } from 'lucide-react-native'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -10,7 +10,11 @@ export function StudioSizeGuideScreen() {
   const router = useRouter()
 
   function handleBackToStudio() {
-    router.replace('/(dashboard)/studio' as never)
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace('/(dashboard)/studio' as never)
+    }
   }
 
   return (
@@ -106,7 +110,7 @@ export function StudioSizeGuideScreen() {
             {/* --- PRO TIP: Elegant Highlight --- */}
             <View className='flex-row items-start gap-4 rounded-[20px] border border-ring-accent/30 bg-ring-accent/5 p-5'>
               <View className='pt-1'>
-                <Sparkles color={THEME.ringAccent} size={18} strokeWidth={1.5} />
+                <Flame color={THEME.ringAccent} size={18} strokeWidth={1.5} />
               </View>
               <View className='flex-1'>
                 <Text className='font-sans-medium mb-1.5 text-[11px] uppercase tracking-[0.2em] text-ring-accent'>

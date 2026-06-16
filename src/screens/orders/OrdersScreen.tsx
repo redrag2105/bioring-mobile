@@ -1,7 +1,6 @@
 import { ScreenHeader } from '@/components/screen/ScreenHeader'
 import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
 import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
-import { useResetTabOnBlur } from '@/hooks/useResetTabOnBlur'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -9,7 +8,6 @@ const ORDER_ROWS = ['In production', 'Awaiting payment', 'Delivered']
 
 export function OrdersScreen() {
   const handleScroll = useDynamicBottomTab()
-  const { resetKey, scrollRef } = useResetTabOnBlur()
 
   return (
     <View className='flex-1 bg-ring-background'>
@@ -17,8 +15,6 @@ export function OrdersScreen() {
         <ScreenHeader eyebrow='Don hang' title='Manage' accent='Orders' />
 
         <ScrollView
-          ref={scrollRef}
-          key={resetKey}
           showsVerticalScrollIndicator={false}
           className='flex-1'
           onScroll={handleScroll}

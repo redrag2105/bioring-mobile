@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
-import { ArrowRight, Check, Link2, ScanLine, Sparkles } from 'lucide-react-native'
+import { ArrowRight, Check, Flower, Link2, ScanLine } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { Image, Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
@@ -248,7 +248,7 @@ export function PostLoginSetupScreen() {
           <View className='flex-1 justify-between px-6 pb-8 pt-6'>
             {/* --- TOP: BRANDING HEADER --- */}
             <Animated.View className='items-center' style={animatedHeaderEntryStyle}>
-              <Sparkles color={THEME.ringAccent} size={16} strokeWidth={1.5} />
+              <Flower color={THEME.ringAccent} size={16} strokeWidth={1.5} />
               <View className='my-2 h-6 w-[1px] bg-ring-primary/20' />
               <Text
                 allowFontScaling={false}

@@ -109,19 +109,7 @@ export default function RootLayout() {
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name='index' />
               <Stack.Screen name='(auth)' />
-              <Stack.Screen name='post-login-setup' />
               <Stack.Screen name='(dashboard)' />
-              <Stack.Screen name='collections' />
-              <Stack.Screen
-                name='collections-canvas'
-                options={{
-                  animation: 'fade',
-                  animationDuration: 280,
-                  presentation: 'card'
-                }}
-              />
-              <Stack.Screen name='studio-size-guide' />
-              <Stack.Screen name='studio-measure-now' />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

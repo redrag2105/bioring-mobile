@@ -2,7 +2,7 @@ import { OnboardingScreen } from '@/components/onboarding/OnboardingCarousel'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { View } from 'react-native'
 
 const ONBOARDING_COMPLETE_KEY = '@bioring:onboarding_complete'
@@ -11,18 +11,18 @@ export default function WelcomeScreen() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const clearOnLoad = async () => {
-      try {
-        await AsyncStorage.clear()
-        console.log('Onboarding async storage cleared on load')
-      } catch (error) {
-        console.error('Failed to clear async storage:', error)
-      }
-    }
+  // useEffect(() => {
+  //   const clearOnLoad = async () => {
+  //     try {
+  //       await AsyncStorage.clear()
+  //       console.log('Onboarding async storage cleared on load')
+  //     } catch (error) {
+  //       console.error('Failed to clear async storage:', error)
+  //     }
+  //   }
 
-    clearOnLoad()
-  }, [])
+  //   clearOnLoad()
+  // }, [])
 
   const completeOnboarding = useCallback(async () => {
     try {

@@ -155,7 +155,7 @@ export function StudioMeasureNowScreen() {
 
         <SafeAreaView className='flex-1' edges={['top', 'bottom']}>
           <View className='flex-1 px-5 pb-1 pt-2'>
-            <View className='mb-3 flex-row items-start justify-between gap-3'>
+            <View className='mb-3 flex-row items-center justify-between gap-3'>
               <Pressable
                 accessibilityRole='button'
                 accessibilityLabel='Back'
