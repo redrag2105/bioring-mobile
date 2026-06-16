@@ -23,7 +23,7 @@ const POST_LOGIN_SETUP_COMPLETE_KEY = '@bioring:post_login_setup_complete'
 const RING_OUTLINE_WATERMARK = require('../../assets/images/collections/ring_outline.png')
 
 const CORNER_RADIUS = 24
-const ENTRY_DURATION = 720
+const ENTRY_DURATION = 540
 const NOTCH_RADIUS = 16 // Kích thước lỗ khoét
 
 export async function markPostLoginSetupComplete() {
@@ -188,9 +188,9 @@ export function PostLoginSetupScreen() {
     }
   }, [router])
 
-  async function completeAndGoHome() {
+  async function completeAndGoHome(forceComplete: boolean = false) {
     try {
-      if (dontShowAgain || canSync) await markPostLoginSetupComplete()
+      if (dontShowAgain || forceComplete) await markPostLoginSetupComplete()
     } catch {
     } finally {
       router.replace('/(dashboard)' as never)
@@ -200,14 +200,14 @@ export function PostLoginSetupScreen() {
   async function handleExploreNow() {
     Keyboard.dismiss()
     handleInputBlur()
-    await completeAndGoHome()
+    await completeAndGoHome(false)
   }
 
   async function handleSyncDesign() {
     if (!canSync) return
     Keyboard.dismiss()
     handleInputBlur()
-    await completeAndGoHome()
+    await completeAndGoHome(false)
   }
 
   if (isCheckingPreference) return <View className='flex-1 bg-[#FDFDFB]' />
@@ -446,7 +446,7 @@ export function PostLoginSetupScreen() {
                   allowFontScaling={false}
                   className='font-sans text-[11px] uppercase tracking-widest text-txt-muted'
                 >
-                  Hide this prologue
+                  Hide this prologue next time
                 </Text>
               </Pressable>
             </Animated.View>
