@@ -23,29 +23,29 @@ const featuredProducts: Product[] = [
 
 const categoryTypes: CategoryType[] = [
   {
-    id: 'cat-minimal',
+    id: 'minimal-bands',
     name: 'Minimal bands',
     productCount: 18,
     // Mẫu nhẫn trơn, tinh tế
     thumbnail_url: 'https://pngimg.com/uploads/ring/ring_PNG66.png',
   },
   {
-    id: 'cat-statement',
-    name: 'Statement rings',
+    id: 'signature-memory',
+    name: 'Signature Memory',
     productCount: 12,
     // Mẫu nhẫn có thiết kế nổi bật
     thumbnail_url: 'https://pngimg.com/uploads/ring/ring_PNG10.png',
   },
   {
-    id: 'cat-couple',
-    name: 'Couple rings',
+    id: 'couple-sets',
+    name: 'Couple Sets',
     productCount: 24,
     // Mẫu nhẫn cặp đôi
     thumbnail_url: 'https://pngimg.com/uploads/ring/ring_PNG24.png',
   },
   {
-    id: 'cat-gemstone',
-    name: 'Gemstone sets',
+    id: 'gemstone-edit',
+    name: 'Gemstone Edit',
     productCount: 9,
     // Mẫu nhẫn đính đá quý
     thumbnail_url: 'https://pngimg.com/uploads/ring/ring_PNG54.png',

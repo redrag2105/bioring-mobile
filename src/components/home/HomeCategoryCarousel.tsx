@@ -44,6 +44,7 @@ const CARD_THEMES = [
 ] as const
 
 function CategoryCard({ category, index }: { category: CategoryType; index: number }) {
+  const router = useRouter()
   const theme = CARD_THEMES[index % CARD_THEMES.length]
   const pressed = useSharedValue(0)
 
@@ -61,6 +62,7 @@ function CategoryCard({ category, index }: { category: CategoryType; index: numb
 
   return (
     <AnimatedPressable
+      onPress={() => router.push(`/collections/${category.id}` as never)}
       onPressIn={() => (pressed.value = 1)}
       onPressOut={() => (pressed.value = 0)}
       style={cardAnimatedStyle}
