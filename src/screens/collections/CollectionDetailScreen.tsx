@@ -1,18 +1,14 @@
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-  type BottomSheetBackdropProps
-} from '@gorhom/bottom-sheet'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { ArrowLeft, Check } from 'lucide-react-native'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { ArrowLeft } from 'lucide-react-native'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import Animated, {
+  Easing,
   FadeIn,
+  FadeInDown,
   useAnimatedRef,
   useAnimatedStyle,
-  useScrollViewOffset,
+  useSharedValue,
+  withRepeat,
   withTiming
 } from 'react-native-reanimated'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -23,19 +19,18 @@ import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
 import { THEME } from '@/constants/theme'
 import { useCollectionDetailQuery } from '@/hooks/queries/useCollectionsQuery'
 import type { CollectionSortOption } from '@/types/collection.types'
-
-const SORT_OPTIONS: { value: CollectionSortOption; label: string }[] = [
-  { value: 'featured', label: 'Latest Release' },
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc', label: 'Price: High to Low' }
-]
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 export function CollectionDetailScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
-  const scrollOffset = useScrollViewOffset(scrollRef)
-  const sortSheetRef = useRef<BottomSheetModal>(null)
+
+  // Background ring animation
+  const rotation = useSharedValue(0)
+  useEffect(() => {
+    rotation.value = withRepeat(withTiming(360, { duration: 60000, easing: Easing.linear }), -1, false)
+  }, [rotation])
 
   const params = useLocalSearchParams<{ collectionId?: string | string[] }>()
   const collectionId = Array.isArray(params.collectionId) ? params.collectionId[0] : params.collectionId
@@ -67,216 +62,189 @@ export function CollectionDetailScreen() {
     else router.replace('/collections' as never)
   }
 
-  const openSortSheet = useCallback(() => {
+  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false)
+
+  const toggleSortMenu = useCallback(() => {
     setIsPriceDrawerOpen(false)
-    sortSheetRef.current?.present()
+    setIsSortMenuOpen((prev) => !prev)
   }, [])
 
   const handleSortOptionChange = useCallback((option: CollectionSortOption) => {
     setSortOption(option)
-    sortSheetRef.current?.dismiss()
+    setIsSortMenuOpen(false)
   }, [])
 
   const closeAllMenus = useCallback(() => {
     setIsPriceDrawerOpen(false)
+    setIsSortMenuOpen(false)
   }, [])
 
   const overlayStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(isPriceDrawerOpen ? 1 : 0, { duration: 240 }),
-    pointerEvents: isPriceDrawerOpen ? 'auto' : 'none'
+    opacity: withTiming(isPriceDrawerOpen || isSortMenuOpen ? 1 : 0, { duration: 240 }),
+    pointerEvents: isPriceDrawerOpen || isSortMenuOpen ? 'auto' : 'none'
   }))
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: withTiming(scrollOffset.value > 12 ? -6 : 0, { duration: 180 }) }]
-  }))
-
-  const renderSortBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.28} pressBehavior='close' />
-    ),
-    []
-  )
+  const leftColumn = visibleProducts.filter((_, i) => i % 2 === 0)
+  const rightColumn = visibleProducts.filter((_, i) => i % 2 !== 0)
 
   if (isLoading) return <CollectionDetailLoading onBack={handleBack} />
   if (!collection) return <CollectionDetailEmpty onBack={handleBack} />
 
   return (
-    <View className='flex-1 bg-ring-background'>
-      <View className='absolute left-6 z-50' style={{ top: insets.top + 10 }}>
-        <Pressable
-          onPress={handleBack}
-          className='h-11 w-11 items-center justify-center rounded-full border border-ring-accent/10 bg-ring-surface/90 shadow-sm'
+    <View className='flex-1 bg-[#F6F4EF]'>
+      <SafeAreaView className='flex-1' edges={['top']}>
+        <Animated.ScrollView
+          ref={scrollRef}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScrollBeginDrag={closeAllMenus}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 60 }}
         >
-          <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.7} />
-        </Pressable>
-      </View>
-
-      <Animated.ScrollView
-        ref={scrollRef}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScrollBeginDrag={closeAllMenus}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}
-      >
-        <Animated.View
-          entering={FadeIn.duration(260)}
-          style={[{ paddingTop: insets.top + 82 }, headerAnimatedStyle]}
-          className='px-6 pb-10'
-        >
-          <View className='items-center'>
-            <Text
-              allowFontScaling={false}
-              className='font-sans-light mb-4 text-[11px] uppercase tracking-[0.34em] text-ring-accent'
-            >
-              The Exhibition
-            </Text>
-            <Text
-              allowFontScaling={false}
-              className='text-center font-serif text-[42px] leading-[48px] text-ring-primary'
-            >
-              {collection.name}
-            </Text>
-            <Text
-              allowFontScaling={false}
-              className='mt-5 text-center font-sans text-[15px] leading-[26px] text-ring-primary/75'
-            >
-              {collection.description}
-            </Text>
-            <View className='mt-7 h-[1px] w-16 bg-ring-accent/30' />
-          </View>
-        </Animated.View>
-
-        <View className='z-20 min-h-screen bg-ring-background'>
-          <CollectionFilterBar
-            isHotFiltered={isHotFiltered}
-            sortOption={sortOption}
-            priceRange={priceRange}
-            onToggleHot={() => setIsHotFiltered(!isHotFiltered)}
-            onSortOptionChange={handleSortOptionChange}
-            onPriceRangeChange={setPriceRange}
-            isPriceDrawerOpen={isPriceDrawerOpen}
-            togglePriceDrawer={() => setIsPriceDrawerOpen((value) => !value)}
-            toggleSortMenu={openSortSheet}
-          />
-
-          <View className='relative flex-1'>
-            <Animated.View
-              style={overlayStyle}
-              className='absolute inset-0 z-10 bg-ring-background/40 backdrop-blur-sm'
-            >
-              <Pressable className='flex-1' onPress={closeAllMenus} />
-            </Animated.View>
-
-            <View className='z-0 px-6 pt-6'>
-              {visibleProducts.length > 0 ? (
-                <View className='flex-row flex-wrap justify-between'>
-                  {visibleProducts.map((product, index) => (
-                    <CollectionProductCard key={product.id} product={product} index={index} />
-                  ))}
-                </View>
-              ) : (
-                <Animated.View entering={FadeIn.duration(180)} className='items-center justify-center py-20'>
-                  <Text
-                    allowFontScaling={false}
-                    className='mb-4 text-center font-serif text-[28px] leading-9 text-ring-primary'
-                  >
-                    Beyond the Horizon
-                  </Text>
-                  <Text
-                    allowFontScaling={false}
-                    className='font-sans-light px-4 text-center text-[14px] leading-6 text-txt-muted'
-                  >
-                    There are no pieces in this specific refinement.{'\n'}Discover similar masterpieces below.
-                  </Text>
-                </Animated.View>
-              )}
-            </View>
-          </View>
-        </View>
-      </Animated.ScrollView>
-
-      <BottomSheetModal
-        ref={sortSheetRef}
-        backdropComponent={renderSortBackdrop}
-        backgroundStyle={{ backgroundColor: THEME.ringSurface }}
-        handleIndicatorStyle={{ backgroundColor: THEME.ringAccent, opacity: 0.55, width: 44 }}
-        snapPoints={['34%']}
-      >
-        <BottomSheetView className='px-6 pb-8 pt-2'>
-          <Text allowFontScaling={false} className='mb-5 font-serif-medium text-[26px] text-ring-primary'>
-            Sort
-          </Text>
-          {SORT_OPTIONS.map((option) => {
-            const isActive = sortOption === option.value
-            return (
+          <Animated.View entering={FadeInDown.duration(800).easing(Easing.out(Easing.exp))}>
+            {/* Inline Left-Aligned Header */}
+            <View className='flex-row items-start px-5 pt-4'>
               <Pressable
-                key={option.value}
-                onPress={() => handleSortOptionChange(option.value)}
-                className='min-h-14 flex-row items-center justify-between border-b border-ring-accent/10 py-4'
+                onPress={handleBack}
+                className='elevation-2 mr-4 mt-1 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
               >
-                <Text
-                  allowFontScaling={false}
-                  className={`font-sans text-[15px] ${isActive ? 'font-sans-bold text-ring-accent' : 'text-ring-primary'}`}
-                >
-                  {option.label}
-                </Text>
-                {isActive && <Check size={18} color={THEME.ringAccent} />}
+                <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
               </Pressable>
-            )
-          })}
-        </BottomSheetView>
-      </BottomSheetModal>
+
+              <View className='flex-1'>
+                <Text className='mb-1 font-sans-bold text-[11px] uppercase tracking-[0.2em] text-txt-muted'>
+                  The Exhibition
+                </Text>
+                <Text className='font-serif-medium text-[32px] leading-10 tracking-tight text-ring-primary'>
+                  {collection.name}
+                </Text>
+              </View>
+            </View>
+
+            <View className='mb-6 mt-3 px-5'>
+              <Text className='font-sans text-[15px] leading-[26px] text-txt-muted'>{collection.description}</Text>
+            </View>
+
+            <CollectionFilterBar
+              isHotFiltered={isHotFiltered}
+              sortOption={sortOption}
+              priceRange={priceRange}
+              onToggleHot={() => setIsHotFiltered(!isHotFiltered)}
+              onSortOptionChange={handleSortOptionChange}
+              onPriceRangeChange={setPriceRange}
+              isPriceDrawerOpen={isPriceDrawerOpen}
+              togglePriceDrawer={() => {
+                setIsSortMenuOpen(false)
+                setIsPriceDrawerOpen((value) => !value)
+              }}
+              isSortMenuOpen={isSortMenuOpen}
+              toggleSortMenu={toggleSortMenu}
+            />
+
+            <View className='relative mt-6 flex-1'>
+              <Animated.View style={overlayStyle} className='absolute inset-0 z-10'>
+                <Pressable className='flex-1' onPress={closeAllMenus} />
+              </Animated.View>
+
+              <View className='z-0 px-5'>
+                {visibleProducts.length > 0 ? (
+                  <View className='flex-row justify-between'>
+                    {/* Left Column */}
+                    <View className='w-[47%] flex-col gap-6'>
+                      {leftColumn.map((product, index) => (
+                        <CollectionProductCard key={product.id} product={product} index={index * 2} />
+                      ))}
+                    </View>
+
+                    {/* Right Column (Staggered) */}
+                    <View className='w-[47%] flex-col gap-6 pt-12'>
+                      {rightColumn.map((product, index) => (
+                        <CollectionProductCard key={product.id} product={product} index={index * 2 + 1} />
+                      ))}
+                    </View>
+                  </View>
+                ) : (
+                  <Animated.View entering={FadeIn.duration(180)} className='items-center justify-center py-24'>
+                    <Text
+                      allowFontScaling={false}
+                      className='mb-4 text-center font-serif text-[28px] leading-9 text-ring-primary'
+                    >
+                      Beyond the Horizon
+                    </Text>
+                    <Text
+                      allowFontScaling={false}
+                      className='font-sans-light px-4 text-center text-[14px] leading-6 text-txt-muted'
+                    >
+                      There are no pieces in this specific refinement.{'\n'}Discover similar masterpieces below.
+                    </Text>
+                  </Animated.View>
+                )}
+              </View>
+            </View>
+          </Animated.View>
+        </Animated.ScrollView>
+      </SafeAreaView>
     </View>
   )
 }
 
 function CollectionDetailLoading({ onBack }: { onBack: () => void }) {
-  const insets = useSafeAreaInsets()
   return (
-    <View className='flex-1 bg-ring-background'>
-      <View className='absolute left-6 z-50' style={{ top: insets.top + 10 }}>
-        <Pressable
-          onPress={onBack}
-          className='h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-ring-surface/90 shadow-sm'
-        >
-          <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={2} />
-        </Pressable>
-      </View>
+    <View className='flex-1 bg-[#F6F4EF]'>
+      <SafeAreaView className='flex-1' edges={['top']}>
+        <View className='z-10 flex-1'>
+          {/* Inline Loading Header */}
+          <View className='flex-row items-start px-5 pb-4 pt-4'>
+            <Pressable
+              onPress={onBack}
+              className='elevation-2 mr-4 mt-1 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
+            >
+              <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
+            </Pressable>
 
-      <View className='flex-1'>
-        <View style={{ paddingTop: insets.top + 82 }} className='px-6 pb-10'>
-          <SkeletonBlock className='mx-auto mb-4 h-3 w-32 rounded-full' />
-          <SkeletonBlock className='mx-auto mb-4 h-12 w-4/5 rounded-full' />
-          <SkeletonBlock className='mb-3 h-4 w-full rounded-full' />
-          <SkeletonBlock className='mx-auto h-4 w-3/4 rounded-full' />
-        </View>
+            <View className='flex-1 justify-center pt-2'>
+              <SkeletonBlock className='mb-3 h-3 w-24 rounded-full' />
+              <SkeletonBlock className='h-8 w-3/4 rounded-full' />
+            </View>
+          </View>
 
-        <View className='bg-ring-background px-6 pt-2'>
-          <SkeletonBlock className='mb-8 h-14 w-full rounded-2xl' />
+          <View className='px-5 pb-6'>
+            <SkeletonBlock className='mb-2 h-4 w-full rounded-full' />
+            <SkeletonBlock className='mb-2 h-4 w-11/12 rounded-full' />
+            <SkeletonBlock className='h-4 w-2/3 rounded-full' />
+          </View>
 
-          <View className='flex-row justify-between'>
-            <SkeletonBlock className='aspect-[4/5] w-[48%] rounded-[24px]' />
-            <SkeletonBlock className='aspect-[4/5] w-[48%] rounded-[24px]' />
+          <View className='px-5 pt-4'>
+            <SkeletonBlock className='mb-10 h-12 w-full rounded-[20px] opacity-60' />
+
+            <View className='flex-row justify-between'>
+              <View className='w-[47%]'>
+                <SkeletonBlock className='aspect-[4/5] w-full rounded-[32px] opacity-80' />
+              </View>
+              <View className='w-[47%] pt-12'>
+                <SkeletonBlock className='aspect-[4/5] w-full rounded-[32px] opacity-80' />
+              </View>
+            </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </View>
   )
 }
 
 function CollectionDetailEmpty({ onBack }: { onBack: () => void }) {
-  const insets = useSafeAreaInsets()
   return (
-    <View className='flex-1 bg-ring-background'>
-      <View className='absolute left-6 z-50' style={{ top: insets.top + 10 }}>
-        <Pressable
-          onPress={onBack}
-          className='h-11 w-11 items-center justify-center rounded-full border border-black/5 bg-white shadow-sm'
-        >
-          <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={2} />
-        </Pressable>
-      </View>
-      <SafeAreaView className='flex-1' edges={['top']}>
+    <View className='flex-1 bg-[#F6F4EF]'>
+      <SafeAreaView className='z-10 flex-1' edges={['top']}>
+        {/* Left Aligned Back Button for Empty State */}
+        <View className='w-full px-5 pt-4'>
+          <Pressable
+            onPress={onBack}
+            className='elevation-2 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
+          >
+            <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
+          </Pressable>
+        </View>
+
         <View className='flex-1 justify-center gap-4 px-8'>
           <Text className='font-serif-medium text-[32px] leading-10 tracking-tight text-ring-primary'>
             Exhibition Not Found

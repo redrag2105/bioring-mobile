@@ -1,5 +1,5 @@
 import { Check, ChevronDown, ChevronUp, Flame, X } from 'lucide-react-native'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Keyboard, LayoutChangeEvent, Pressable, Text, TextInput, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -86,10 +86,13 @@ export function CollectionFilterBar({
     isHotFiltered || sortOption !== 'featured' || priceRange[0] > MIN_PRICE || priceRange[1] < MAX_PRICE
 
   // Hàm chuyển đổi Giá <-> Tọa độ X
-  const priceToX = (price: number) => {
-    if (!trackWidth) return 0
-    return ((price - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * trackWidth
-  }
+  const priceToX = useCallback(
+    (price: number) => {
+      if (!trackWidth) return 0
+      return ((price - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * trackWidth
+    },
+    [trackWidth]
+  )
 
   const xToPrice = (x: number) => {
     'worklet'
@@ -107,7 +110,7 @@ export function CollectionFilterBar({
       setMinInputText(formatCurrency(priceRange[0]))
       setMaxInputText(formatCurrency(priceRange[1]))
     }
-  }, [priceRange, trackWidth])
+  }, [priceRange, trackWidth, minX, maxX, priceToX])
 
   // --- Handlers Reset ---
   const handleResetPrice = () => {
@@ -193,37 +196,10 @@ export function CollectionFilterBar({
   const minThumbStyle = useAnimatedStyle(() => ({ transform: [{ translateX: minX.value - THUMB_SIZE / 2 }] }))
   const maxThumbStyle = useAnimatedStyle(() => ({ transform: [{ translateX: maxX.value - THUMB_SIZE / 2 }] }))
 
-  // Helper Components cho Reanimated Text
-  const MinText = () => {
-    const textStyle = useAnimatedStyle(() => ({}) as any)
-    return (
-      <Animated.Text
-        allowFontScaling={false}
-        style={textStyle}
-        className='font-sans-light text-[14px] tracking-widest text-ring-primary'
-      >
-        {minX.value !== undefined ? formatCurrency(xToPrice(minX.value)) : '0'} ₫
-      </Animated.Text>
-    )
-  }
-
-  const MaxText = () => {
-    const textStyle = useAnimatedStyle(() => ({}) as any)
-    return (
-      <Animated.Text
-        allowFontScaling={false}
-        style={textStyle}
-        className='font-sans-light text-[14px] tracking-widest text-ring-primary'
-      >
-        {maxX.value !== undefined ? formatCurrency(xToPrice(maxX.value)) : '0'} ₫
-      </Animated.Text>
-    )
-  }
-
   return (
-    <View className='relative z-40 bg-ring-background'>
+    <View className='relative z-40 bg-transparent'>
       {/* --- STICKY UTILITY BAR --- */}
-      <View className='flex-row items-center justify-between border-b border-ring-accent/10 px-6 py-4'>
+      <View className='flex-row items-center justify-between px-8 py-4'>
         <View className='flex-row items-center gap-6'>
           {/* Nút Sort */}
           <Pressable onPress={toggleSortMenu} className='flex-row items-center gap-1.5 py-2'>
@@ -293,27 +269,9 @@ export function CollectionFilterBar({
         <Animated.View
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
-          className='absolute left-6 top-[60px] z-50 w-[200px] rounded-2xl border border-ring-accent/5 bg-ring-surface/95 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.1)] backdrop-blur-xl'
+          className='absolute left-6 top-[60px] z-50 w-[220px] rounded-2xl border border-ring-accent/10 bg-white py-2 shadow-[0_12px_40px_rgba(0,0,0,0.12)]'
         >
-          {/* Option: All / Mặc định */}
-          <Pressable
-            onPress={() => {
-              onSortOptionChange('featured')
-              toggleSortMenu()
-            }}
-            className='flex-row items-center justify-between border-b border-ring-accent/10 px-5 py-3.5'
-          >
-            <Text
-              allowFontScaling={false}
-              className={`font-sans text-[14px] ${sortOption === 'featured' ? 'font-sans-bold text-ring-accent' : 'text-ring-primary/70'}`}
-            >
-              {SORT_LABELS['all']}
-            </Text>
-            {sortOption === 'featured' && <Check size={14} color={THEME.ringAccent} />}
-          </Pressable>
-
-          {/* Các option sort còn lại */}
-          {(['price-asc', 'price-desc'] as CollectionSortOption[]).map((option) => {
+          {(['featured', 'price-asc', 'price-desc'] as CollectionSortOption[]).map((option, index) => {
             const isActive = sortOption === option
             return (
               <Pressable
@@ -322,11 +280,11 @@ export function CollectionFilterBar({
                   onSortOptionChange(option)
                   toggleSortMenu()
                 }}
-                className='flex-row items-center justify-between px-5 py-3.5'
+                className={`flex-row items-center justify-between px-5 py-3.5 ${index !== 2 ? 'border-b border-ring-accent/5' : ''}`}
               >
                 <Text
                   allowFontScaling={false}
-                  className={`font-sans text-[14px] ${isActive ? 'font-sans-bold text-ring-accent' : 'text-ring-primary/70'}`}
+                  className={`font-sans text-[14px] ${isActive ? 'font-sans-bold text-ring-accent' : 'text-ring-primary/80'}`}
                 >
                   {SORT_LABELS[option]}
                 </Text>
@@ -338,7 +296,7 @@ export function CollectionFilterBar({
       )}
 
       {/* --- PRICE DRAWER (Ngăn kéo Giá) --- */}
-      <Animated.View style={drawerAnimatedStyle} className='overflow-hidden bg-ring-background px-6'>
+      <Animated.View style={drawerAnimatedStyle} className='overflow-hidden bg-transparent px-8'>
         <View className='h-full justify-between pb-6 pt-5'>
           {/* Header Ngăn kéo: Tựa đề & Nút Reset */}
           <View className='mb-2 flex-row items-center justify-between'>

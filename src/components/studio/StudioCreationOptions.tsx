@@ -6,16 +6,16 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-    Easing,
-    cancelAnimation,
-    interpolate,
-    runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withSequence,
-    withSpring,
-    withTiming
+  Easing,
+  cancelAnimation,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming
 } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
@@ -79,7 +79,7 @@ export function StudioCreationOptions() {
       setTimeout(() => {
         router.push('/collections' as never)
         resetState()
-      }, 1000)
+      }, 720)
     } else {
       bottomContentOpacity.value = withTiming(0, { duration: 1000 })
       topContentOpacity.value = withTiming(0, { duration: 350 })
@@ -87,7 +87,7 @@ export function StudioCreationOptions() {
       setTimeout(() => {
         router.push('/studio/ai-stylist' as never)
         resetState()
-      }, 1000)
+      }, 720)
     }
   }
 

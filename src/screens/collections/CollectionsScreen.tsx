@@ -350,7 +350,7 @@ function SwipeUpIndicator() {
   return (
     <Animated.View
       pointerEvents='none'
-      style={[style, { position: 'absolute', bottom: 12, left: 0, right: 0, zIndex: 50, alignItems: 'center' }]}
+      style={[style, { position: 'absolute', bottom: 18, left: 0, right: 0, zIndex: 50, alignItems: 'center' }]}
     >
       <ChevronDown color={THEME.ringPrimary} size={28} strokeWidth={1.2} opacity={0.4} />
     </Animated.View>

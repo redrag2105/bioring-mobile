@@ -1,4 +1,4 @@
-import type { Collection, CollectionDetail, CollectionProduct } from '@/types/collection.types'
+import type { Collection, CollectionDetail, CollectionProduct } from '@/types/collection.types';
 
 const collections: Collection[] = [
   {
@@ -32,6 +32,7 @@ const collections: Collection[] = [
 ]
 
 const collectionProducts: CollectionProduct[] = [
+  // --- Minimal Bands ---
   {
     id: 'prd-minimal-01',
     collection_id: 'minimal-bands',
@@ -60,6 +61,26 @@ const collectionProducts: CollectionProduct[] = [
     is_active: true
   },
   {
+    id: 'prd-minimal-04',
+    collection_id: 'minimal-bands',
+    name: 'Matte Flat Band',
+    description: 'A modern flat band featuring a brushed matte finish for a contemporary look.',
+    base_price: 2600000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+  {
+    id: 'prd-minimal-05',
+    collection_id: 'minimal-bands',
+    name: 'Tapered Edge Ring',
+    description: 'A minimalist ring that gently tapers at the base for maximum comfort.',
+    base_price: 2900000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+
+  // --- Signature Memory ---
+  {
     id: 'prd-memory-01',
     collection_id: 'signature-memory',
     name: 'Fingerprint Keepsake',
@@ -86,6 +107,26 @@ const collectionProducts: CollectionProduct[] = [
     thumbnail_url: 'https://images.unsplash.com/photo-1589674781759-c21c37956a44?auto=format&fit=crop&w=900&q=80',
     is_active: true
   },
+  {
+    id: 'prd-memory-04',
+    collection_id: 'signature-memory',
+    name: 'Soundwave Band',
+    description: 'Capture a voice note with a custom soundwave etched around the band.',
+    base_price: 4350000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1590548784585-643d2b9f2925?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+  {
+    id: 'prd-memory-05',
+    collection_id: 'signature-memory',
+    name: 'Coordinates Ring',
+    description: 'Deeply engraved with the geographic coordinates of your most treasured location.',
+    base_price: 3100000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1611591437107-16492982d1c6?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+
+  // --- Couple Sets ---
   {
     id: 'prd-couple-01',
     collection_id: 'couple-sets',
@@ -114,6 +155,26 @@ const collectionProducts: CollectionProduct[] = [
     is_active: true
   },
   {
+    id: 'prd-couple-04',
+    collection_id: 'couple-sets',
+    name: 'Interlocking Sets',
+    description: 'Matching bands featuring subtle grooves that fit perfectly together.',
+    base_price: 5800000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1584305514101-7080f5d0fba5?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+  {
+    id: 'prd-couple-05',
+    collection_id: 'couple-sets',
+    name: 'Contrast Texture Duo',
+    description: 'A balanced pair showcasing complementary brushed and high-polish finishes.',
+    base_price: 4950000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1605100806494-b2586f3bdf59?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+
+  // --- Gemstone Edit ---
+  {
     id: 'prd-gem-01',
     collection_id: 'gemstone-edit',
     name: 'Moonlit Sapphire',
@@ -139,8 +200,26 @@ const collectionProducts: CollectionProduct[] = [
     base_price: 7950000,
     thumbnail_url: 'https://images.unsplash.com/photo-1608042314453-ae338d80c427?auto=format&fit=crop&w=900&q=80',
     is_active: true
+  },
+  {
+    id: 'prd-gem-04',
+    collection_id: 'gemstone-edit',
+    name: 'Emerald Cut Solitaire',
+    description: 'A striking emerald-cut center stone secured in a minimalist bezel setting.',
+    base_price: 8500000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?auto=format&fit=crop&w=900&q=80',
+    is_active: true
+  },
+  {
+    id: 'prd-gem-05',
+    collection_id: 'gemstone-edit',
+    name: 'Ruby Twilight Band',
+    description: 'A sleek, sophisticated band featuring three flush-set ruby accents.',
+    base_price: 7600000,
+    thumbnail_url: 'https://images.unsplash.com/photo-1588444650733-d0767b0dc082?auto=format&fit=crop&w=900&q=80',
+    is_active: true
   }
-]
+];
 
 export async function getCollections(): Promise<Collection[]> {
   return collections
