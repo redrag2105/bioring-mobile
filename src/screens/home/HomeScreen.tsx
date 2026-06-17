@@ -1,18 +1,16 @@
-import { ScreenHeader } from '@/components/screen/ScreenHeader'
-import { HomeCategorySection } from '@/components/home/HomeCategoryCarousel'
-import { FeaturedCarousel } from '@/components/home/FeaturedCarousel'
-import { HowBioringWorks } from '@/components/home/HowBioringWorks'
-import { HomeQuickAction } from '@/components/home/HomeQuickAction'
 import { CustomerStorySection } from '@/components/home/CustomerStorySection'
-import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
-import { useResetTabOnBlur } from '@/hooks/useResetTabOnBlur'
+import { FeaturedCarousel } from '@/components/home/FeaturedCarousel'
+import { HomeCategorySection } from '@/components/home/HomeCategoryCarousel'
+import { HomeQuickAction } from '@/components/home/HomeQuickAction'
+import { HowBioringWorks } from '@/components/home/HowBioringWorks'
+import { ScreenHeader } from '@/components/screen/ScreenHeader'
 import { useCategoryTypesQuery, useFeaturedProductsQuery } from '@/hooks/queries/useHomeQueries'
+import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
 import { ScrollView, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function HomeScreen() {
   const handleScroll = useDynamicBottomTab()
-  const { resetKey, scrollRef } = useResetTabOnBlur()
   const insets = useSafeAreaInsets()
   const { data: featuredProducts = [] } = useFeaturedProductsQuery()
   const { data: categoryTypes = [] } = useCategoryTypesQuery()
@@ -23,8 +21,6 @@ export function HomeScreen() {
         <ScreenHeader eyebrow='Kham pha' title='Your' accent='Sanctuary' />
 
         <ScrollView
-          ref={scrollRef}
-          key={resetKey}
           showsVerticalScrollIndicator={false}
           className='flex-1'
           onScroll={handleScroll}

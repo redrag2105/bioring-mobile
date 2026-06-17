@@ -33,17 +33,24 @@ export function FingerMeasurePreview({ diameter, diameterMm, size }: FingerMeasu
       />
 
       {/* 2. Tiêu đề (Đã bỏ đường kẻ ngang, đổi Live Width sang màu Accent) */}
-      <View className='absolute left-0 right-0 top-5 items-center' pointerEvents='none'>
+      <View className='absolute left-0 right-0 top-4 items-center px-5' pointerEvents='none'>
         <Text
           allowFontScaling={false}
-          className='font-sans-bold text-[10px] uppercase tracking-[0.25em] text-ring-accent'
+          className='font-sans-bold text-[9px] uppercase tracking-[0.24em] text-ring-accent'
         >
-          Live Width
+          Finger Measure
         </Text>
-        <Text allowFontScaling={false} className='mt-1 font-serif text-[24px] leading-7 text-ring-primary'>
+        <Text
+          allowFontScaling={false}
+          numberOfLines={1}
+          className='mt-1 text-center font-sans text-[10px] leading-4 text-txt-muted'
+        >
+          Align the live width with your finger.
+        </Text>
+        <Text allowFontScaling={false} className='mt-0.5 font-serif text-[22px] leading-6 text-ring-primary'>
           {size}
         </Text>
-        <Text allowFontScaling={false} className='font-sans text-[11px] text-txt-muted'>
+        <Text allowFontScaling={false} className='font-sans text-[10px] leading-3 text-txt-muted'>
           {diameter} inner diameter
         </Text>
       </View>

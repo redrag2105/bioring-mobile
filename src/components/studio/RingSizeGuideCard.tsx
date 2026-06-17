@@ -139,7 +139,8 @@ export function RingSizeGuideCard() {
       <View className='relative z-10 flex-row items-center gap-3 p-6 pt-4'>
         <Pressable
           onPress={handleOpenGuide}
-          className='flex-1 items-center justify-center rounded-full border-[0.5px] border-ring-primary/40 bg-transparent py-3.5 shadow-sm shadow-black/5 active:opacity-70'
+          className='flex-1 items-center justify-center rounded-full border-[0.5px] border-ring-primary/40 bg-transparent py-3.5 shadow-sm shadow-black/5'
+          style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         >
           <Text className='font-sans-medium text-[11px] uppercase tracking-wider text-ring-primary'>
             Measure Manually
@@ -148,7 +149,8 @@ export function RingSizeGuideCard() {
 
         <Pressable
           onPress={handleMeasureNow}
-          className='flex-1 items-center justify-center rounded-full bg-ring-primary py-3.5 shadow-lg shadow-ring-primary/25 active:opacity-80'
+          className='flex-1 items-center justify-center rounded-full bg-ring-primary py-3.5 shadow-lg shadow-ring-primary/25'
+          style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         >
           <Text className='font-sans-medium text-[11px] uppercase tracking-wider text-white'>Measure Now</Text>
         </Pressable>

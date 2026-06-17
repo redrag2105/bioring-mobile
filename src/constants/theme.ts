@@ -35,3 +35,11 @@ export const FONTS = {
 } as const
 
 export type ThemeColors = keyof typeof THEME
+
+export const SPACING = {
+  screenX: 'px-5',
+  sectionGap: 'gap-5',
+  cardGap: 'gap-3',
+  controlPadding: 'px-4 py-3',
+  cardPadding: 'p-3',
+} as const

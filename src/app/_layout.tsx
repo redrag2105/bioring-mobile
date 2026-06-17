@@ -50,8 +50,8 @@ function useAuthDeepLinkHandler(enabled: boolean) {
             console.log('Refresh token stored successfully via deeplink')
           }
 
-          // Navigate to dashboard
-          router.replace('/(dashboard)')
+          // Navigate to the first-login setup gate before entering the dashboard
+          router.replace('/post-login-setup')
         } catch (err) {
           console.error('Failed to store tokens from deeplink:', err)
         }
@@ -110,8 +110,6 @@ export default function RootLayout() {
               <Stack.Screen name='index' />
               <Stack.Screen name='(auth)' />
               <Stack.Screen name='(dashboard)' />
-              <Stack.Screen name='studio-size-guide' />
-              <Stack.Screen name='studio-measure-now' />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

@@ -101,9 +101,9 @@ export function OnboardingScreen({ onSkip, onStartNow, isLoading = false }: Onbo
 
     // Thiết lập bộ đếm thời gian 5 giây
     const timer = setInterval(() => {
-      flatListRef.current?.scrollToIndex({ 
-        index: currentIndex + 1, 
-        animated: true 
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true
       })
     }, 5000)
 
@@ -306,7 +306,6 @@ function NavigationAction({
   slideWidth,
   slideCount
 }: NavigationActionProps) {
-  
   const nextAnimatedStyle = useAnimatedStyle(() => {
     const lastSlideOffset = slideWidth * (slideCount - 1)
     const fadeStartOffset = lastSlideOffset - slideWidth * 0.5
@@ -331,23 +330,21 @@ function NavigationAction({
         style={startNowAnimatedStyle}
       >
         <TouchableOpacity
-          className='h-[52px] w-full items-center justify-center rounded-full border-[rgba(26,26,26,0.2)] bg-ring-background'
-          style={{
-            borderWidth: HAIRLINE_WIDTH,
-            shadowColor: '#000000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.06, 
-            shadowRadius: 10,
-            elevation: 2 
-          }}
+          className='relative h-[56px] w-full flex-row items-center justify-center rounded-full bg-ring-primary shadow-lg shadow-ring-primary/20'
           onPress={onStartNow}
-          activeOpacity={0.82}
+          activeOpacity={0.85}
           disabled={!isLastSlide || isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color={EDITORIAL_BLACK} />
+            <ActivityIndicator color='#FFFFFF' />
           ) : (
-            <Text className='font-sans-bold text-xs tracking-[1.5px] text-[#1A1A1A]'>START NOW</Text>
+            <>
+              {/* Added ml-[2.4px] to balance the tracking offset and keep it perfectly visually centered */}
+              <Text className='ml-[2.4px] font-sans-bold text-[11px] tracking-[2.4px] text-white'>START NOW</Text>
+              <View className='absolute bottom-0 right-6 top-0 justify-center'>
+                <ArrowRight size={16} color='#FFFFFF' strokeWidth={1.5} />
+              </View>
+            </>
           )}
         </TouchableOpacity>
       </Animated.View>

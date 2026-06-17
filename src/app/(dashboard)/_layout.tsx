@@ -5,11 +5,11 @@ export default function DashboardLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomBottomTabBar {...props} />}
+      detachInactiveScreens={false}
       screenOptions={{
         headerShown: false,
-        animation: 'none',
-        lazy: true,
-        popToTopOnBlur: true
+        animation: 'shift',
+        lazy: true
       }}
     >
       <Tabs.Screen

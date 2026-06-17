@@ -1,6 +1,5 @@
 import { logout } from '@/core/apis/auth.api'
 import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
-import { useResetTabOnBlur } from '@/hooks/useResetTabOnBlur'
 import { useQueryClient } from '@tanstack/react-query'
 import { useFocusEffect, useRouter } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
@@ -24,12 +23,12 @@ function SettingsItem({ icon: Icon, label, value, onPress, danger }: SettingsIte
       disabled={!onPress}
       className='flex-row items-center border-b border-ui-border px-4 py-3.5'
     >
-      <View className={`mr-3.5 h-9 w-9 items-center justify-center rounded-[10px] ${danger ? 'bg-status-error/10' : 'bg-ring-accent/10'}`}>
+      <View
+        className={`mr-3.5 h-9 w-9 items-center justify-center rounded-[10px] ${danger ? 'bg-status-error/10' : 'bg-ring-accent/10'}`}
+      >
         <Icon size={18} className={danger ? 'text-status-error' : 'text-ring-accent'} />
       </View>
-      <Text className={`flex-1 font-sans text-[15px] ${danger ? 'text-status-error' : 'text-txt-main'}`}>
-        {label}
-      </Text>
+      <Text className={`flex-1 font-sans text-[15px] ${danger ? 'text-status-error' : 'text-txt-main'}`}>{label}</Text>
       {value ? <Text className='mr-2 font-sans text-sm text-txt-body'>{value}</Text> : null}
       {onPress ? <ChevronRight size={18} className='text-txt-body' /> : null}
     </TouchableOpacity>
@@ -46,7 +45,6 @@ export function ProfileScreen() {
     setProfile({})
     setRefreshing(false)
   }, [])
-  const { resetKey, scrollRef } = useResetTabOnBlur({ onReset: resetProfileState })
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -57,21 +55,21 @@ export function ProfileScreen() {
   useFocusEffect(
     useCallback(() => {
       const loadProfile = async () => {
-      try {
-        const token = await SecureStore.getItemAsync('access_token')
+        try {
+          const token = await SecureStore.getItemAsync('access_token')
 
-        if (token) {
-          const { jwtDecode } = await import('jwt-decode')
-          const decoded: any = jwtDecode(token)
-          setProfile({
-            email: decoded.email || decoded.username || '',
-            id: decoded.sub || decoded.id || ''
-          })
+          if (token) {
+            const { jwtDecode } = await import('jwt-decode')
+            const decoded: any = jwtDecode(token)
+            setProfile({
+              email: decoded.email || decoded.username || '',
+              id: decoded.sub || decoded.id || ''
+            })
+          }
+        } catch (error) {
+          console.error(error)
         }
-      } catch (error) {
-        console.error(error)
       }
-    }
 
       loadProfile()
     }, [])
@@ -107,8 +105,6 @@ export function ProfileScreen() {
         </View>
 
         <ScrollView
-          ref={scrollRef}
-          key={resetKey}
           showsVerticalScrollIndicator={false}
           className='flex-1'
           onScroll={handleScroll}
@@ -134,7 +130,12 @@ export function ProfileScreen() {
             <View className='gap-2.5'>
               <Text className='px-1 font-sans-bold text-xs uppercase tracking-wide text-txt-body'>Preferences</Text>
               <View className='overflow-hidden rounded-2xl border border-ui-border bg-ring-surface'>
-                <SettingsItem icon={Bell} label='Notifications' value='Enabled' onPress={() => Alert.alert('Coming Soon')} />
+                <SettingsItem
+                  icon={Bell}
+                  label='Notifications'
+                  value='Enabled'
+                  onPress={() => Alert.alert('Coming Soon')}
+                />
                 <SettingsItem icon={Moon} label='Appearance' value='Light' onPress={() => Alert.alert('Coming Soon')} />
               </View>
             </View>
@@ -142,8 +143,16 @@ export function ProfileScreen() {
             <View className='gap-2.5'>
               <Text className='px-1 font-sans-bold text-xs uppercase tracking-wide text-txt-body'>Support</Text>
               <View className='overflow-hidden rounded-2xl border border-ui-border bg-ring-surface'>
-                <SettingsItem icon={HelpCircle} label='Help Center' onPress={() => router.push('/(modals)/help-center' as never)} />
-                <SettingsItem icon={Shield} label='Privacy Policy' onPress={() => router.push('/(modals)/privacy-policy' as never)} />
+                <SettingsItem
+                  icon={HelpCircle}
+                  label='Help Center'
+                  onPress={() => router.push('/(modals)/help-center' as never)}
+                />
+                <SettingsItem
+                  icon={Shield}
+                  label='Privacy Policy'
+                  onPress={() => router.push('/(modals)/privacy-policy' as never)}
+                />
               </View>
             </View>
 
