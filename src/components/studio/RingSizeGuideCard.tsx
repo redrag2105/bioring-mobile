@@ -29,11 +29,11 @@ export function RingSizeGuideCard() {
   }))
 
   const handleOpenGuide = () => {
-    router.push('/studio-size-guide' as any)
+    router.push('/(screens)/studio-size-guide' as any)
   }
 
   const handleMeasureNow = () => {
-    router.push('/studio-measure-now' as any)
+    router.push('/(screens)/studio-measure-now' as any)
   }
 
   return (

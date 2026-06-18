@@ -1,3 +1,4 @@
+import { THEME } from '@/constants/theme'
 import type { LucideIcon } from 'lucide-react-native'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
@@ -61,8 +62,7 @@ export function TabBarButton({ label, focused, icon: Icon, isSticky, onPress }: 
         <Animated.View style={iconAnimatedStyle}>
           <Icon
             size={22}
-            color={focused ? '#B69B7A' : undefined}
-            className={focused ? undefined : 'text-txt-muted'}
+            color={focused ? THEME.ringAccent : THEME.textMuted}
             strokeWidth={focused ? 1.8 : 1.4}
           />
         </Animated.View>

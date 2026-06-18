@@ -65,7 +65,7 @@ export default function ProductDetailScreen() {
 
   const handleStartDesign = () => {
     router.push({
-      pathname: '/studio',
+      pathname: '/(screens)/ring-studio',
       params: { templateId: product?.id }
     })
   }

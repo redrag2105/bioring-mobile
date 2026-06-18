@@ -32,7 +32,7 @@ export function CollectionProductCard({ product, index = 0, isDimmed = false }: 
   const handlePress = () => {
     router.push({
       pathname: '/product/[productId]',
-      params: { id: product.id }
+      params: { productId: product.id }
     })
   }
 
