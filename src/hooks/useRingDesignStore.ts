@@ -98,14 +98,25 @@ export const useRingDesignStore = create<RingDesignState>((set, get) => ({
       const exists = state.package_types.includes(type)
       const nextTypes = exists ? state.package_types.filter((item) => item !== type) : [...state.package_types, type]
       const guardedTypes = nextTypes.length ? nextTypes : state.package_types
-      const physicalEngravingType =
-        guardedTypes.length === 1
-          ? guardedTypes[0]
-          : state.package_types.length === 1 && guardedTypes.length > 1
-            ? undefined
-            : guardedTypes.includes(state.customization_config.physicalEngravingType as BioEngravingType)
-              ? state.customization_config.physicalEngravingType
-              : undefined
+
+      const prevEngravables = state.package_types.filter((t) => t !== 'heartbeat')
+      const nextEngravables = guardedTypes.filter((t) => t !== 'heartbeat')
+
+      let physicalEngravingType = state.customization_config.physicalEngravingType
+
+      if (nextEngravables.length === 1) {
+        physicalEngravingType = nextEngravables[0]
+      } else if (prevEngravables.length <= 1 && nextEngravables.length > 1) {
+        physicalEngravingType = undefined
+      } else if (
+        nextEngravables.length > 1 &&
+        physicalEngravingType &&
+        !nextEngravables.includes(physicalEngravingType as any)
+      ) {
+        physicalEngravingType = undefined
+      } else if (nextEngravables.length === 0) {
+        physicalEngravingType = undefined
+      }
 
       return {
         package_types: guardedTypes,

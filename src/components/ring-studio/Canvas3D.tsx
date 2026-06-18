@@ -3,7 +3,7 @@ import { useRingDesignStore } from '@/hooks/useRingDesignStore'
 import { Canvas, useFrame } from '@react-three/fiber/native'
 import { cssInterop } from 'nativewind'
 import React, { memo, useRef, useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { runOnJS } from 'react-native-reanimated'
 import type { Group, Mesh } from 'three'
@@ -108,9 +108,7 @@ export const Canvas3D = memo(function Canvas3D() {
   })
 
   return (
-    <View className='absolute left-0 right-0 top-0 z-0 h-[50%] overflow-hidden bg-[#F5F1E9]'>
-      <View className='absolute inset-0 bg-ring-primary/5' />
-
+    <View className='absolute left-0 right-0 top-0 z-0 h-[50%] overflow-hidden'>
       <GestureDetector gesture={pan}>
         <View className='h-full w-full'>
           <Canvas className='h-full w-full' camera={{ position: [0, 0, 5.2], fov: 34 }}>
@@ -118,21 +116,6 @@ export const Canvas3D = memo(function Canvas3D() {
           </Canvas>
         </View>
       </GestureDetector>
-
-      <View className='absolute left-0 right-0 top-20 items-center' pointerEvents='none'></View>
-      <View className='absolute bottom-12 left-0 right-0 items-center' pointerEvents='none'>
-        <Text className='font-sans text-[10px] uppercase tracking-[0.24em] text-ring-primary/40'>
-          Swipe to rotate {Math.abs(rotationHint) > 0 ? Math.abs(rotationHint) : ''}
-        </Text>
-      </View>
-      <View className='absolute bottom-0 left-0 right-0 h-24 bg-ring-background/35' />
-      <View className='absolute bottom-0 left-0 right-0 h-16 bg-[#F8F7F5]/65' />
-      <Text className='absolute bottom-6 left-8 font-serif text-[34px] leading-[38px] text-ring-primary/10'>
-        BioRing
-      </Text>
-      <Text className='absolute bottom-7 right-8 font-sans-bold text-[9px] uppercase tracking-[0.3em] text-ring-accent/70'>
-        Atelier
-      </Text>
     </View>
   )
 })

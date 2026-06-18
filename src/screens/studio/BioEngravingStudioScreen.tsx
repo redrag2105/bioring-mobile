@@ -16,10 +16,10 @@ function EngravingFooter({ onReview, disabled }: { onReview: () => void; disable
 
   return (
     <View
-      className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5]/90 px-5 shadow-2xl shadow-ring-primary/10'
+      className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5] px-5 shadow-2xl shadow-ring-primary/10'
       style={{
-        height: (insets.bottom > 0 ? insets.bottom : 0) + 58,
-        paddingBottom: insets.bottom > 0 ? insets.bottom : 0
+        paddingBottom: Math.max(insets.bottom, 16),
+        paddingTop: 16
       }}
     >
       <View className='flex-row items-center justify-between gap-4'>
@@ -52,7 +52,10 @@ export function BioEngravingStudioScreen() {
   const insets = useSafeAreaInsets()
   const selectedTypes = useRingDesignStore((state) => state.package_types)
   const physicalEngravingType = useRingDesignStore((state) => state.customization_config.physicalEngravingType)
-  const canReview = selectedTypes.length === 1 || Boolean(physicalEngravingType)
+
+  const engravableTypes = selectedTypes.filter((type) => type !== 'heartbeat')
+  const canReview =
+    engravableTypes.length <= 1 || Boolean(physicalEngravingType && physicalEngravingType !== 'heartbeat')
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) router.back()
@@ -75,8 +78,8 @@ export function BioEngravingStudioScreen() {
       <SafeAreaView className='z-20 flex-1' edges={['top']}>
         <StudioHeader onBack={handleBack} />
 
-        <View className='flex-1 justify-end px-0' style={{ paddingBottom: insets.bottom + 74 }}>
-          <View className='max-h-[66%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15'>
+        <View className='flex-1 justify-end px-0' style={{ paddingBottom: 0 }}>
+          <View className='max-h-[75%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15'>
             <LinearGradient
               colors={['rgba(255,255,255,0.92)', 'rgba(248,247,245,0.74)']}
               className='absolute inset-0'
@@ -102,7 +105,7 @@ export function BioEngravingStudioScreen() {
             <ScrollView
               showsVerticalScrollIndicator={false}
               className='px-5'
-              contentContainerStyle={{ paddingBottom: 28, paddingTop: 22 }}
+              contentContainerStyle={{ paddingBottom: insets.bottom + 98, paddingTop: 22 }}
             >
               <BioEngravingStudio />
             </ScrollView>

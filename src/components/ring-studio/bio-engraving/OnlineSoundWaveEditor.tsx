@@ -143,7 +143,8 @@ export function OnlineSoundWaveEditor({
       recordingLimitTimeoutRef.current = setTimeout(() => {
         stopRecordingRef.current()
       }, MAX_RECORDING_SECONDS * 1000)
-    } catch {
+    } catch (e) {
+      console.error('==== CANNOT RECORD ====', e)
       if (isMountedRef.current) setRecordingError('Recording could not start. Please try again.')
     } finally {
       if (isMountedRef.current) setIsPreparing(false)

@@ -1,5 +1,6 @@
 import { THEME } from '@/constants/theme'
 import { Pause, Play, Scissors, Timer, Waves } from 'lucide-react-native'
+import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SoundWaveTrack } from './SoundWaveTrack'
 
@@ -17,7 +18,7 @@ export function SoundWavePlaybackControls({ activePlaybackMode, onPreviewPress }
   ]
 
   return (
-    <View className='flex-row gap-2 rounded-[24px] border border-white/70 bg-white/45 p-1.5'>
+    <View className='flex-row gap-2 p-1.5'>
       {controls.map(({ mode, label, caption, Icon }) => {
         const isActive = activePlaybackMode === mode
 
@@ -28,7 +29,7 @@ export function SoundWavePlaybackControls({ activePlaybackMode, onPreviewPress }
               void onPreviewPress(mode)
             }}
             className={`h-[54px] flex-1 flex-row items-center justify-center gap-2 rounded-[19px] ${
-              isActive ? 'bg-ring-primary' : 'bg-transparent'
+              isActive ? 'bg-ring-primary shadow-none' : ' bg-white/70 shadow-sm shadow-ring-primary/5'
             }`}
             style={({ pressed }) => ({ opacity: pressed ? 0.78 : 1 })}
           >
@@ -45,7 +46,6 @@ export function SoundWavePlaybackControls({ activePlaybackMode, onPreviewPress }
             </View>
             <View className='min-w-0'>
               <View className='flex-row items-center gap-1.5'>
-                {/* <Icon color={isActive ? '#FFFFFF' : THEME.ringAccent} size={12} strokeWidth={1.5} /> */}
                 <Text
                   allowFontScaling={false}
                   className={`font-sans-bold text-[9px] uppercase tracking-[0.16em] ${
@@ -92,53 +92,69 @@ export function SoundWaveTrimDeck({
   onCropChange,
   onPreviewPress
 }: SoundWaveTrimDeckProps) {
+  const [liveCropStart, setLiveCropStart] = useState(cropStart)
+
+  useEffect(() => {
+    setLiveCropStart(cropStart)
+  }, [cropStart])
+
+  const liveTrimEnd = Math.min(liveCropStart + cropDuration, duration)
+
   return (
-    <View className='gap-4 overflow-hidden rounded-[28px] border border-white/70 bg-white/50 p-5 shadow-sm shadow-ring-primary/5'>
-      <View className='absolute left-0 right-0 top-0 h-1 bg-ring-accent/70' />
-      <View className='flex-row items-center justify-between gap-4'>
-        <View className='min-w-0 flex-1 flex-row items-center gap-3'>
-          <View className='h-9 w-9 items-center justify-center rounded-full bg-ring-accent/10'>
-            <Scissors color={THEME.ringAccent} size={15} strokeWidth={1.5} />
-          </View>
-          <View className='min-w-0 flex-1'>
-            <Text className='font-sans-bold text-[9px] uppercase tracking-[0.24em] text-ring-primary/50'>
-              Required 3s Trim
-            </Text>
-            <Text className='mt-1 font-sans text-[12px] leading-5 text-txt-muted'>
-              Drag the highlighted window across the recorded wave.
-            </Text>
+    <View className='rounded-[28px] shadow-xl shadow-ring-primary/10'>
+      <View className='gap-4 overflow-hidden rounded-[28px] border border-white/70 bg-white/50 p-5 '>
+        <View className='absolute left-0 right-0 top-0 h-1 bg-ring-accent/70' />
+        <View className='flex-row items-center justify-between gap-4'>
+          <View className='min-w-0 flex-1 flex-row items-center gap-3'>
+            <View className='h-9 w-9 items-center justify-center rounded-full bg-ring-accent/10'>
+              <Scissors color={THEME.ringAccent} size={15} strokeWidth={1.5} />
+            </View>
+            <View className='min-w-0 flex-1'>
+              <Text className='font-sans-bold text-[9px] uppercase tracking-[0.24em] text-ring-primary/50'>
+                Required 3s Trim
+              </Text>
+              <Text className='mt-1 font-sans text-[12px] leading-5 text-txt-muted'>
+                Drag the highlighted window across the recorded wave.
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      <SoundWavePlaybackControls activePlaybackMode={activePlaybackMode} onPreviewPress={onPreviewPress} />
+        <SoundWavePlaybackControls activePlaybackMode={activePlaybackMode} onPreviewPress={onPreviewPress} />
 
-      <SoundWaveTrack
-        amplitudes={amplitudes}
-        cropStart={cropStart}
-        duration={duration}
-        cropDuration={cropDuration}
-        onCropChange={onCropChange}
-        playheadTime={playheadTime}
-        isPlaybackActive={Boolean(activePlaybackMode)}
-      />
+        <SoundWaveTrack
+          amplitudes={amplitudes}
+          cropStart={cropStart}
+          duration={duration}
+          cropDuration={cropDuration}
+          playheadTime={playheadTime}
+          isPlaybackActive={Boolean(activePlaybackMode)}
+          onDragUpdate={(val) => {
+            setLiveCropStart(val)
+          }}
+          onCropChange={(val) => {
+            setLiveCropStart(val)
+            onCropChange(val)
+          }}
+        />
 
-      <View className='flex-row items-center justify-between rounded-[18px] bg-white/40 px-4 py-3'>
-        <View>
-          <Text className='font-sans-bold text-[8px] uppercase tracking-[0.24em] text-ring-primary/40'>Start</Text>
-          <Text allowFontScaling={false} className='mt-1 font-serif text-[18px] text-ring-primary'>
-            {cropStart.toFixed(1)}s
-          </Text>
-        </View>
-        <View className='mx-4 h-[1px] flex-1 bg-ring-primary/10' />
-        <View className='items-end'>
-          <View className='flex-row items-center gap-1.5'>
-            <Timer color={THEME.ringPrimary} size={10} strokeWidth={1.5} />
-            <Text className='font-sans-bold text-[8px] uppercase tracking-[0.24em] text-ring-primary/40'>End</Text>
+        <View className='flex-row items-center justify-between rounded-[18px] bg-white/70 px-4 py-3 shadow-sm shadow-ring-primary/5'>
+          <View>
+            <Text className='font-sans-bold text-[8px] uppercase tracking-[0.24em] text-ring-primary/40'>Start</Text>
+            <Text allowFontScaling={false} className='mt-1 font-serif text-[18px] text-ring-primary'>
+              {liveCropStart.toFixed(1)}s
+            </Text>
           </View>
-          <Text allowFontScaling={false} className='mt-1 font-serif text-[18px] text-ring-primary'>
-            {trimEnd.toFixed(1)}s
-          </Text>
+          <View className='mx-4 h-[1px] flex-1 bg-ring-primary/10' />
+          <View className='items-end'>
+            <View className='flex-row items-center gap-1.5'>
+              <Timer color={THEME.ringPrimary} size={10} strokeWidth={1.5} />
+              <Text className='font-sans-bold text-[8px] uppercase tracking-[0.24em] text-ring-primary/40'>End</Text>
+            </View>
+            <Text allowFontScaling={false} className='mt-1 font-serif text-[18px] text-ring-primary'>
+              {liveTrimEnd.toFixed(1)}s
+            </Text>
+          </View>
         </View>
       </View>
     </View>

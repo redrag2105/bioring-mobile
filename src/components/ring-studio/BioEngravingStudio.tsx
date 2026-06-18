@@ -17,8 +17,7 @@ export function BioEngravingStudio() {
   const setEngravingPlacement = useRingDesignStore((state) => state.setEngravingPlacement)
 
   const engravableTypes = selectedTypes.filter((type) => type !== 'heartbeat')
-  const onlySoundWave = selectedTypes.length === 1 && selectedTypes.includes('sound_wave')
-  const isMultiOption = selectedTypes.length >= 2
+  const isMultiOption = engravableTypes.length > 1
   const resolvedEngravingType =
     physicalEngravingType && physicalEngravingType !== 'heartbeat'
       ? physicalEngravingType
@@ -26,8 +25,9 @@ export function BioEngravingStudio() {
         ? engravableTypes[0]
         : undefined
   const shouldShowTools = engravableTypes.length === 1 || Boolean(resolvedEngravingType)
+  const isSoundWaveSelected = resolvedEngravingType === 'sound_wave'
 
-  if (isMultiOption && engravableTypes.length > 1 && !resolvedEngravingType) {
+  if (isMultiOption && !resolvedEngravingType) {
     return (
       <View className='gap-6 pb-4'>
         <PhysicalEngravingChoice />
@@ -36,42 +36,41 @@ export function BioEngravingStudio() {
     )
   }
 
-  if (onlySoundWave) {
-    return (
-      <View className='gap-6 pb-4'>
-        <OnlineSoundWaveEditor
-          position={position}
-          scale={scale}
-          rotation={rotation}
-          onPositionChange={setEngravingPosition}
-          onScaleChange={setEngravingScale}
-          onRotationChange={setEngravingRotation}
-          placementControl={<PlacementControl placement={placement} onChange={setEngravingPlacement} />}
-        />
-        <EngravingNotice onlySoundWave />
-      </View>
-    )
-  }
+  const isOnlySoundWave = isSoundWaveSelected && !isMultiOption
 
   return (
     <View className='gap-6 pb-4'>
-      {isMultiOption && engravableTypes.length > 1 ? <PhysicalEngravingChoice /> : null}
+      {isMultiOption ? <PhysicalEngravingChoice /> : null}
+
+      {!isOnlySoundWave && <EngravingNotice onlySoundWave={false} />}
 
       {shouldShowTools && resolvedEngravingType ? (
-        <View className='gap-6'>
-          <PlacementControl placement={placement} onChange={setEngravingPlacement} />
-          <AlignmentToolPanel
+        isSoundWaveSelected ? (
+          <OnlineSoundWaveEditor
             position={position}
             scale={scale}
             rotation={rotation}
             onPositionChange={setEngravingPosition}
             onScaleChange={setEngravingScale}
             onRotationChange={setEngravingRotation}
+            placementControl={<PlacementControl placement={placement} onChange={setEngravingPlacement} />}
           />
-        </View>
+        ) : (
+          <View className='gap-6'>
+            <PlacementControl placement={placement} onChange={setEngravingPlacement} />
+            <AlignmentToolPanel
+              position={position}
+              scale={scale}
+              rotation={rotation}
+              onPositionChange={setEngravingPosition}
+              onScaleChange={setEngravingScale}
+              onRotationChange={setEngravingRotation}
+            />
+          </View>
+        )
       ) : null}
 
-      <EngravingNotice onlySoundWave={false} />
+      {isOnlySoundWave && <EngravingNotice onlySoundWave={true} />}
     </View>
   )
 }

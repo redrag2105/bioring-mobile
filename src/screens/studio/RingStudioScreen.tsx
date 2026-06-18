@@ -28,10 +28,10 @@ function StickyFooter({ onAction }: { onAction: () => void }) {
 
   return (
     <View
-      className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5]/90 px-5 shadow-2xl shadow-ring-primary/10'
+      className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5] px-5 shadow-2xl shadow-ring-primary/10'
       style={{
-        height: (insets.bottom > 0 ? insets.bottom : 0) + 60,
-        paddingBottom: insets.bottom > 0 ? insets.bottom : 0
+        paddingBottom: Math.max(insets.bottom, 16),
+        paddingTop: 16
       }}
     >
       <View className='flex-row items-center justify-between gap-4'>
@@ -116,13 +116,10 @@ export function RingStudioScreen() {
         <SafeAreaView className='flex-1' edges={['top']}>
           <StudioHeader onBack={handleBack} />
 
-          <View
-            className='flex-1 justify-end px-0'
-            style={{ paddingBottom: isKeyboardVisible ? 8 : insets.bottom + 76 }}
-          >
+          <View className='flex-1 justify-end px-0' style={{ paddingBottom: isKeyboardVisible ? 8 : 0 }}>
             <View
               className={`overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15 ${
-                isKeyboardVisible ? 'max-h-[84%]' : 'max-h-[66%]'
+                isKeyboardVisible ? 'max-h-[84%]' : 'max-h-[75%]'
               }`}
             >
               <LinearGradient
@@ -153,7 +150,11 @@ export function RingStudioScreen() {
                 automaticallyAdjustKeyboardInsets
                 className='px-5'
                 contentContainerStyle={{
-                  paddingBottom: isKeyboardVisible ? 140 : activeTab === 'basic' ? 10 : 28,
+                  paddingBottom: isKeyboardVisible
+                    ? 140
+                    : activeTab === 'basic'
+                      ? insets.bottom + 80
+                      : insets.bottom + 98,
                   paddingTop: 22
                 }}
               >

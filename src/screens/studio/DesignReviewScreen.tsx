@@ -190,14 +190,14 @@ export function DesignReviewScreen() {
           <View className='h-9 w-9' />
         </View>
 
-        <View className='flex-1 justify-end px-0' style={{ paddingBottom: insets.bottom + 76 }}>
-          <View className='max-h-[66%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/70 shadow-2xl shadow-ring-primary/15'>
+        <View className='flex-1 justify-end px-0' style={{ paddingBottom: 0 }}>
+          <View className='max-h-[75%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/70 shadow-2xl shadow-ring-primary/15'>
             <LinearGradient colors={['rgba(255,255,255,0.96)', 'rgba(248,247,245,0.8)']} className='absolute inset-0' />
             <SummaryHeader />
             <ScrollView
               showsVerticalScrollIndicator={false}
               className='px-5'
-              contentContainerStyle={{ paddingBottom: 28, paddingTop: 10 }}
+              contentContainerStyle={{ paddingBottom: insets.bottom + 98, paddingTop: 10 }}
             >
               <SummaryRow label='Material' value={MATERIAL_LABELS[selectedMaterialId ?? ''] ?? 'Platinum'} />
               <SummaryRow label='Size' value={ringSize ?? 'Size 6'} />
@@ -225,10 +225,10 @@ export function DesignReviewScreen() {
       </SafeAreaView>
 
       <View
-        className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5]/90 px-5 shadow-2xl shadow-ring-primary/10'
+        className='absolute bottom-0 left-0 right-0 z-40 justify-center border-t border-white/70 bg-[#F8F7F5] px-5 shadow-2xl shadow-ring-primary/10'
         style={{
-          height: (insets.bottom > 0 ? insets.bottom : 0) + 60,
-          paddingBottom: insets.bottom > 0 ? insets.bottom : 0
+          paddingBottom: Math.max(insets.bottom, 16),
+          paddingTop: 16
         }}
       >
         <View className='flex-row items-center justify-between gap-4'>
