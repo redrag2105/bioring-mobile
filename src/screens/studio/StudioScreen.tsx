@@ -13,7 +13,7 @@ export function StudioScreen() {
   return (
     <View className='flex-1 bg-[#F6F4EF]'>
       <SafeAreaView className='flex-1' edges={['top']}>
-        <ScreenHeader eyebrow='Thiet ke' title='Create your' accent='BioRing' />
+        <ScreenHeader eyebrow='Start now' title='Create your' accent='BioRing' />
 
         <ScrollView
           showsVerticalScrollIndicator={false}

@@ -12,6 +12,7 @@ import {
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 
 import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
+import { PriceText } from '@/components/common/PriceText'
 import type { Product } from '@/types/home.types'
 
 type FeaturedCarouselProps = {
@@ -19,14 +20,6 @@ type FeaturedCarouselProps = {
 }
 
 const AUTO_SLIDE_INTERVAL = 5000
-
-function formatPrice(value: number) {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  }).format(value)
-}
 
 export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
   const carouselRef = useRef<ScrollView>(null)
@@ -123,9 +116,12 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
 
               <View className='mb-3 mt-2 h-[1px] w-12 bg-white/30' />
 
-              <Text className='font-sans-light text-[15px] tracking-wider text-white/90'>
-                From {formatPrice(product.base_price)}
-              </Text>
+              <PriceText
+                value={product.base_price}
+                prefix='From '
+                prefixClassName='font-sans-light'
+                className='text-[15px] tracking-wider text-white/90'
+              />
             </View>
           </Pressable>
         ))}

@@ -12,7 +12,7 @@ export function OrdersScreen() {
   return (
     <View className='flex-1 bg-ring-background'>
       <SafeAreaView className='flex-1' edges={['top']}>
-        <ScreenHeader eyebrow='Don hang' title='Manage' accent='Orders' />
+        <ScreenHeader eyebrow='Purchases' title='Manage' accent='Orders' />
 
         <ScrollView
           showsVerticalScrollIndicator={false}

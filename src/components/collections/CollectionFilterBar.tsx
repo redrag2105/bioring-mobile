@@ -324,10 +324,10 @@ export function CollectionFilterBar({
                   keyboardType='numeric'
                   returnKeyType='done'
                   allowFontScaling={false}
-                  className='font-sans-light m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
+                  className='font-serif m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
                 />
-                <Text allowFontScaling={false} className='font-sans-light ml-1 text-[15px] text-ring-primary/50'>
-                  ₫
+                <Text allowFontScaling={false} className='ml-1 font-sans text-[15px] text-ring-primary/50'>
+                  đ
                 </Text>
               </View>
             </View>
@@ -344,10 +344,10 @@ export function CollectionFilterBar({
                   returnKeyType='done'
                   allowFontScaling={false}
                   textAlign='right'
-                  className='font-sans-light m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
+                  className='font-serif m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
                 />
-                <Text allowFontScaling={false} className='font-sans-light ml-1 text-[15px] text-ring-primary/50'>
-                  ₫
+                <Text allowFontScaling={false} className='ml-1 font-sans text-[15px] text-ring-primary/50'>
+                  đ
                 </Text>
               </View>
             </View>

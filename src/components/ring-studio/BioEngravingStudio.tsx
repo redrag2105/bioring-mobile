@@ -18,6 +18,9 @@ export function BioEngravingStudio() {
 
   const engravableTypes = selectedTypes.filter((type) => type !== 'heartbeat')
   const isMultiOption = engravableTypes.length > 1
+  const isSoundWaveHeartbeatPackage =
+    selectedTypes.length === 2 && selectedTypes.includes('sound_wave') && selectedTypes.includes('heartbeat')
+  const canCaptureSoundWave = selectedTypes.length === 1 && selectedTypes.includes('sound_wave')
   const resolvedEngravingType =
     physicalEngravingType && physicalEngravingType !== 'heartbeat'
       ? physicalEngravingType
@@ -26,6 +29,14 @@ export function BioEngravingStudio() {
         : undefined
   const shouldShowTools = engravableTypes.length === 1 || Boolean(resolvedEngravingType)
   const isSoundWaveSelected = resolvedEngravingType === 'sound_wave'
+
+  if (isSoundWaveHeartbeatPackage) {
+    return (
+      <View className='gap-6 pb-4'>
+        <EngravingNotice onlySoundWave={false} />
+      </View>
+    )
+  }
 
   if (isMultiOption && !resolvedEngravingType) {
     return (
@@ -36,7 +47,7 @@ export function BioEngravingStudio() {
     )
   }
 
-  const isOnlySoundWave = isSoundWaveSelected && !isMultiOption
+  const isOnlySoundWave = isSoundWaveSelected && canCaptureSoundWave
 
   return (
     <View className='gap-6 pb-4'>
@@ -54,6 +65,7 @@ export function BioEngravingStudio() {
             onScaleChange={setEngravingScale}
             onRotationChange={setEngravingRotation}
             placementControl={<PlacementControl placement={placement} onChange={setEngravingPlacement} />}
+            allowCapture={canCaptureSoundWave}
           />
         ) : (
           <View className='gap-6'>

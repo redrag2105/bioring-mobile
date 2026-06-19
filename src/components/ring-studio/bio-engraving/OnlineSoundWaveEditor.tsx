@@ -1,6 +1,8 @@
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
+import * as DocumentPicker from 'expo-document-picker'
 import {
   RecordingPresets,
+  createAudioPlayer,
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
   useAudioRecorder,
@@ -17,6 +19,7 @@ import { useSoundWavePlayback } from './useSoundWavePlayback'
 
 const AUDIO_RECORDING_OPTIONS = { ...RecordingPresets.HIGH_QUALITY, isMeteringEnabled: true }
 const MAX_RECORDING_SECONDS = 15
+const UPLOAD_DURATION_TOLERANCE_SECONDS = 0.25
 
 type OnlineSoundWaveEditorProps = {
   position: number
@@ -26,6 +29,23 @@ type OnlineSoundWaveEditorProps = {
   onScaleChange: (scale: number) => void
   onRotationChange: (rotation: number) => void
   placementControl?: ReactNode
+  allowCapture?: boolean
+}
+
+async function getAudioDurationSeconds(uri: string) {
+  const player = createAudioPlayer({ uri }, { updateInterval: 80 })
+
+  try {
+    for (let attempt = 0; attempt < 35; attempt += 1) {
+      const duration = player.duration || player.currentStatus.duration
+      if (Number.isFinite(duration) && duration > 0) return duration
+      await new Promise((resolve) => setTimeout(resolve, 80))
+    }
+  } finally {
+    player.remove()
+  }
+
+  return 0
 }
 
 export function OnlineSoundWaveEditor({
@@ -35,7 +55,8 @@ export function OnlineSoundWaveEditor({
   onPositionChange,
   onScaleChange,
   onRotationChange,
-  placementControl
+  placementControl,
+  allowCapture = true
 }: OnlineSoundWaveEditorProps) {
   const soundWave = useRingDesignStore((state) => state.customization_config.soundWave)
   const setSoundWaveClip = useRingDesignStore((state) => state.setSoundWaveClip)
@@ -197,8 +218,54 @@ export function OnlineSoundWaveEditor({
   })
 
   const handleRecordPress = () => {
+    if (!allowCapture) return
     if (isRecording) void stopRecording()
     else void startRecording()
+  }
+
+  const handleUploadPress = async () => {
+    if (!allowCapture || isPreparing || isRecording) return
+    setIsPreparing(true)
+    setRecordingError(null)
+    void stopPlayback()
+
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'audio/*',
+        copyToCacheDirectory: true,
+        multiple: false,
+        base64: false
+      })
+
+      if (result.canceled) return
+
+      const asset = result.assets[0]
+      if (!asset?.uri) throw new Error('Missing uploaded audio URI')
+
+      const uploadedDuration = await getAudioDurationSeconds(asset.uri)
+      if (!uploadedDuration) {
+        setRecordingError('Uploaded audio could not be read. Please choose another file.')
+        return
+      }
+
+      if (uploadedDuration > MAX_RECORDING_SECONDS + UPLOAD_DURATION_TOLERANCE_SECONDS) {
+        setRecordingError('Please upload an audio file that is 15 seconds or shorter.')
+        return
+      }
+
+      setSoundWaveClip({
+        sourceUri: asset.uri,
+        durationSeconds: Math.max(SOUNDWAVE_CROP_SECONDS, Number(uploadedDuration.toFixed(1))),
+        cropStartSeconds: 0,
+        cropDurationSeconds: SOUNDWAVE_CROP_SECONDS,
+        amplitudes: normalizeAmplitudes([])
+      })
+    } catch (e) {
+      console.error('==== CANNOT UPLOAD AUDIO ====', e)
+      if (isMountedRef.current) setRecordingError('Audio upload could not be completed. Please try again.')
+    } finally {
+      if (isMountedRef.current) setIsPreparing(false)
+    }
   }
 
   const handleCropChange = (nextCropStart: number) => {
@@ -208,24 +275,28 @@ export function OnlineSoundWaveEditor({
 
   return (
     <View className='gap-5'>
-      <View className='rounded-[18px] border border-ring-accent/20 bg-ring-accent/5 px-4 py-3'>
-        <Text className='font-sans text-[11px] leading-5 text-ring-primary/75'>
-          Record up to 15s. The product engraving uses your selected 3s segment, while the full 15s recording stays
-          available in the Memory Card.
-        </Text>
-      </View>
+      {!allowCapture ? (
+        <View className='rounded-[18px] border border-ring-accent/20 bg-ring-accent/5 px-4 py-3'>
+          <Text className='font-sans text-[11px] leading-5 text-ring-primary/75'>
+            SoundWave is used as the visual engraving mark for this package. Recording and upload are available only when SoundWave is the only selected package.
+          </Text>
+        </View>
+      ) : null}
 
-      <SoundWaveRecorderCard
-        isPreparing={isPreparing}
-        isRecording={isRecording}
-        hasRecordedClip={hasRecordedClip}
-        durationMillis={recorderState.durationMillis}
-        recordingError={recordingError}
-        recordingPulse={recordingPulse}
-        onRecordPress={handleRecordPress}
-      />
+      {allowCapture ? (
+        <SoundWaveRecorderCard
+          isPreparing={isPreparing}
+          isRecording={isRecording}
+          hasRecordedClip={hasRecordedClip}
+          durationMillis={recorderState.durationMillis}
+          recordingError={recordingError}
+          recordingPulse={recordingPulse}
+          onRecordPress={handleRecordPress}
+          onUploadPress={handleUploadPress}
+        />
+      ) : null}
 
-      {hasRecordedClip ? (
+      {allowCapture && hasRecordedClip ? (
         <SoundWaveTrimDeck
           amplitudes={amplitudes}
           cropStart={cropStart}
@@ -239,7 +310,21 @@ export function OnlineSoundWaveEditor({
         />
       ) : null}
 
-      {hasRecordedClip ? (
+      {allowCapture ? (
+        hasRecordedClip ? (
+          <>
+            {placementControl}
+            <LayoutSliderGroup
+              position={position}
+              scale={scale}
+              rotation={rotation}
+              onPositionChange={onPositionChange}
+              onScaleChange={onScaleChange}
+              onRotationChange={onRotationChange}
+            />
+          </>
+        ) : null
+      ) : (
         <>
           {placementControl}
           <LayoutSliderGroup
@@ -251,7 +336,7 @@ export function OnlineSoundWaveEditor({
             onRotationChange={onRotationChange}
           />
         </>
-      ) : null}
+      )}
     </View>
   )
 }

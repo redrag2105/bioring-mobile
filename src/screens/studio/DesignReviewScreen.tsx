@@ -3,7 +3,7 @@ import { SoundWavePlaybackControls } from '@/components/ring-studio/bio-engravin
 import { useSoundWavePlayback } from '@/components/ring-studio/bio-engraving/useSoundWavePlayback'
 import { THEME } from '@/constants/theme'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
-import { formatPrice } from '@/utils/formatPrice'
+import { PriceText } from '@/components/common/PriceText'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react-native'
@@ -236,7 +236,7 @@ export function DesignReviewScreen() {
             <Text className='font-sans-bold text-[8px] uppercase tracking-[0.22em] text-ring-primary/45'>
               Final Estimate
             </Text>
-            <Text className='font-serif text-[20px] leading-6 text-ring-primary'>{formatPrice(estimatedPrice)}</Text>
+            <PriceText value={estimatedPrice} className='text-[20px] leading-6 text-ring-primary' />
           </View>
 
           <Pressable

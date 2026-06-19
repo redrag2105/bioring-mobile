@@ -5,6 +5,7 @@ import type {
   MemoryCardDraft,
   RingDesignDraftPayload,
   RingStudioTab,
+  SavedRingMeasurement,
   SoundWaveClip
 } from '@/types/ring-studio.types'
 import { create } from 'zustand'
@@ -14,8 +15,10 @@ const MOCK_HEARTBEAT = [8, 12, 54, 18, 10, 82, 20, 12, 46, 16, 8, 64, 22]
 
 type RingDesignState = RingDesignDraftPayload & {
   activeTab: RingStudioTab
+  savedRingMeasurement?: SavedRingMeasurement
   setActiveTab: (tab: RingStudioTab) => void
   setProductId: (productId?: string) => void
+  startProductDesign: (productId?: string) => void
   setBasicSpec: (
     spec: Partial<
       Pick<
@@ -28,6 +31,7 @@ type RingDesignState = RingDesignDraftPayload & {
       >
     >
   ) => void
+  saveRingMeasurement: (measurement: SavedRingMeasurement) => void
   togglePackageType: (type: BioEngravingType) => void
   setPhysicalEngravingType: (type: BioEngravingType) => void
   setEngravingPosition: (position: number) => void
@@ -74,17 +78,26 @@ export const useRingDesignStore = create<RingDesignState>((set, get) => ({
   selected_gemstone_shape: 'Round',
   ring_size: 'Size 6',
   selected_user_ring_size_id: undefined,
+  savedRingMeasurement: undefined,
   package_types: ['sound_wave'],
   customization_config: initialConfig,
   memory_card: {
-    secretMessage: '',
-    anniversaryDate: undefined,
+    cardTitle: 'Our Keepsake',
+    secretMessage: 'A small archive of the day our lives learned the same rhythm.',
+    dateLabel: 'June 19, 2026',
     reuseSoundWaveVoice: true,
-    templateId: 'ivory-vow'
+    templateId: 'artistic-landscape',
+    userPhotoUri: undefined,
+    userPhotoOffset: {
+      x: 0,
+      y: 0
+    },
+    userPhotoScale: 1
   },
   estimated_price: calculateEstimatedPrice({ package_types: ['sound_wave'], selected_gemstone_id: undefined }),
   setActiveTab: (activeTab) => set({ activeTab }),
   setProductId: (product_id) => set({ product_id }),
+  startProductDesign: (product_id) => set({ product_id, activeTab: 'basic' }),
   setBasicSpec: (spec) =>
     set((state) => {
       const next = { ...state, ...spec }
@@ -92,6 +105,11 @@ export const useRingDesignStore = create<RingDesignState>((set, get) => ({
         ...spec,
         estimated_price: calculateEstimatedPrice(next)
       }
+    }),
+  saveRingMeasurement: (savedRingMeasurement) =>
+    set({
+      ring_size: savedRingMeasurement.size,
+      savedRingMeasurement
     }),
   togglePackageType: (type) =>
     set((state) => {

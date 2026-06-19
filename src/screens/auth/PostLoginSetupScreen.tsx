@@ -403,12 +403,13 @@ export function PostLoginSetupScreen() {
                     </Pressable>
                   </Animated.View>
 
-                  {/* Mã vạch cao và đậm */}
+                  {/* Mã vạch*/}
                   <Animated.View className='mt-8 flex-row justify-center gap-[3px]' style={animatedBarcodeEntryStyle}>
                     {[...Array(22)].map((_, i) => (
                       <View
                         key={i}
-                        className={`h-12 bg-ring-primary ${i % 3 === 0 ? 'w-1' : i % 5 === 0 ? 'w-1.5' : 'w-[1.5px]'}`}
+                        // Thêm /40 vào sau bg-ring-primary để giảm opacity xuống 40%
+                        className={`h-12 bg-ring-primary/40 ${i % 3 === 0 ? 'w-1' : i % 5 === 0 ? 'w-1.5' : 'w-[1.5px]'}`}
                       />
                     ))}
                   </Animated.View>

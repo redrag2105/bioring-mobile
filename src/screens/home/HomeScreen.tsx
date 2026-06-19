@@ -18,7 +18,7 @@ export function HomeScreen() {
   return (
     <View className='flex-1 bg-ring-background'>
       <SafeAreaView className='flex-1' edges={['top']}>
-        <ScreenHeader eyebrow='Kham pha' title='Your' accent='Sanctuary' />
+        <ScreenHeader eyebrow='Discover' title='Your' accent='Sanctuary' />
 
         <ScrollView
           showsVerticalScrollIndicator={false}

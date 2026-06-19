@@ -1,11 +1,11 @@
 import { BasicSpecsPanel } from '@/components/ring-studio/BasicSpecsPanel'
+import { PriceText } from '@/components/common/PriceText'
 import { Canvas3D } from '@/components/ring-studio/Canvas3D'
 import { PackageSelector } from '@/components/ring-studio/PackageSelector'
 import { StudioHeader } from '@/components/ring-studio/StudioHeader'
 import { StudioStepIndicator } from '@/components/ring-studio/StudioStepIndicator'
 import { THEME } from '@/constants/theme'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
-import { formatPrice } from '@/utils/formatPrice'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ArrowRight, Gem } from 'lucide-react-native'
@@ -39,7 +39,7 @@ function StickyFooter({ onAction }: { onAction: () => void }) {
           <Text className='font-sans-bold text-[8px] uppercase tracking-[0.22em] text-ring-primary/45'>
             Estimated Price
           </Text>
-          <Text className='font-serif text-[20px] leading-6 text-ring-primary'>{formatPrice(estimatedPrice)}</Text>
+          <PriceText value={estimatedPrice} className='text-[20px] leading-6 text-ring-primary' />
         </View>
 
         <Pressable
@@ -57,16 +57,24 @@ function StickyFooter({ onAction }: { onAction: () => void }) {
 export function RingStudioScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const params = useLocalSearchParams<{ templateId?: string; productId?: string }>()
+  const params = useLocalSearchParams<{ templateId?: string; productId?: string; initialStep?: string }>()
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
   const activeTab = useRingDesignStore((state) => state.activeTab)
   const setActiveTab = useRingDesignStore((state) => state.setActiveTab)
   const setProductId = useRingDesignStore((state) => state.setProductId)
+  const startProductDesign = useRingDesignStore((state) => state.startProductDesign)
 
   useEffect(() => {
-    setProductId(params.productId ?? params.templateId)
-  }, [params.productId, params.templateId, setProductId])
+    const productId = params.productId ?? params.templateId
+
+    if (params.initialStep === 'basic') {
+      startProductDesign(productId)
+      return
+    }
+
+    setProductId(productId)
+  }, [params.initialStep, params.productId, params.templateId, setProductId, startProductDesign])
 
   useEffect(() => {
     const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'

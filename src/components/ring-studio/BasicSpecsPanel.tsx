@@ -1,7 +1,8 @@
 import { STUDIO_PHYSICAL_MEASURE_OPTIONS } from '@/constants/studioMeasure'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
+import { useFocusEffect } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Keyboard, ScrollView, Text, View } from 'react-native'
 import { GemstonePicker } from './basic-specs/GemstonePicker'
 import { MaterialPicker } from './basic-specs/MaterialPicker'
@@ -21,6 +22,13 @@ export function BasicSpecsPanel() {
   useEffect(() => {
     if (ringSize) setSizeInput(getSizeNumber(ringSize))
   }, [ringSize])
+
+  useFocusEffect(
+    useCallback(() => {
+      const savedSize = useRingDesignStore.getState().ring_size
+      if (savedSize) setSizeInput(getSizeNumber(savedSize))
+    }, [])
+  )
 
   const selectedSizeIndex = useMemo(() => {
     const index = STUDIO_PHYSICAL_MEASURE_OPTIONS.findIndex((option) => option.size === ringSize)

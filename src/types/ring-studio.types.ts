@@ -4,6 +4,13 @@ export type EngravingPlacement = 'outer_band' | 'inner_band'
 
 export type RingStudioTab = 'basic' | 'package' | 'engraving' | 'memory'
 
+export type SavedRingMeasurement = {
+  name: string
+  size: string
+  diameterMm: number
+  mode: 'finger' | 'ring'
+}
+
 export type SoundWaveClip = {
   sourceUri?: string
   durationSeconds: number
@@ -27,10 +34,37 @@ export type BioEngravingConfig = {
 }
 
 export type MemoryCardDraft = {
+  cardTitle: string
   secretMessage: string
-  anniversaryDate?: string
+  dateLabel: string
   reuseSoundWaveVoice: boolean
   templateId: string
+  userPhotoUri?: string
+  croppedUserPhotoUri?: string
+  userPhotoOffset?: {
+    x: number
+    y: number
+  }
+  userPhotoScale?: number
+  userPhotoSourceSize?: {
+    width: number
+    height: number
+  }
+  userPhotoCrop?: {
+    offset: {
+      x: number
+      y: number
+    }
+    size: {
+      width: number
+      height: number
+    }
+    displaySize: {
+      width: number
+      height: number
+    }
+    resizeMode: 'cover'
+  }
 }
 
 export type RingDesignDraftPayload = {

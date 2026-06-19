@@ -17,7 +17,8 @@ import Svg, { Circle, Defs, Line, Mask, Rect } from 'react-native-svg'
 
 import { THEME } from '@/constants/theme'
 import { useProductDetailQuery } from '@/hooks/queries/useProductQuery'
-import { formatPrice } from '@/utils/formatPrice'
+import { useRingDesignStore } from '@/hooks/useRingDesignStore'
+import { PriceText } from '@/components/common/PriceText'
 
 // Extracted Components
 import { ProductBiometrics } from '@/components/product/ProductBiometrics'
@@ -35,6 +36,7 @@ export default function ProductDetailScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const params = useLocalSearchParams<{ productId?: string }>()
+  const startProductDesign = useRingDesignStore((state) => state.startProductDesign)
 
   const { data: product, isLoading, isError } = useProductDetailQuery(params.productId)
 
@@ -64,9 +66,10 @@ export default function ProductDetailScreen() {
   }, [router])
 
   const handleStartDesign = () => {
+    startProductDesign(product?.id)
     router.push({
       pathname: '/(screens)/ring-studio',
-      params: { templateId: product?.id }
+      params: { productId: product?.id, initialStep: 'basic' }
     })
   }
 
@@ -236,7 +239,7 @@ export default function ProductDetailScreen() {
       >
         <View className='mb-4 flex-row items-center justify-between px-2'>
           <Text className='font-sans-bold text-[9px] uppercase tracking-[0.25em] text-txt-muted'>Base Investment</Text>
-          <Text className='font-sans-medium text-[16px] text-ring-primary'>{formatPrice(product.base_price)}</Text>
+          <PriceText value={product.base_price} className='text-[16px] text-ring-primary' />
         </View>
 
         <Pressable

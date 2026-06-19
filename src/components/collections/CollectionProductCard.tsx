@@ -3,7 +3,7 @@ import { Image, Pressable, Text, View } from 'react-native'
 import Animated, { Easing, FadeIn, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import type { CollectionProduct } from '@/types/collection.types'
-import { formatPrice } from '@/utils/formatPrice'
+import { PriceText } from '@/components/common/PriceText'
 
 type CollectionProductCardProps = {
   product: CollectionProduct
@@ -68,12 +68,7 @@ export function CollectionProductCard({ product, index = 0, isDimmed = false }: 
             >
               {product.name}
             </Text>
-            <Text
-              className='font-sans-bold text-[11px] uppercase tracking-widest text-ring-accent'
-              allowFontScaling={false}
-            >
-              {formatPrice(product.base_price)}
-            </Text>
+            <PriceText value={product.base_price} className='text-[11px] tracking-widest text-ring-accent' />
           </View>
         </Pressable>
       </Animated.View>

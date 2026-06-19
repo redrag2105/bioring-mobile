@@ -63,7 +63,7 @@ function getLiveMeasurement(index: number) {
 export function StudioMeasureNowScreen() {
   const router = useRouter()
   const rulerRef = useRef<ScrollView>(null)
-  const setBasicSpec = useRingDesignStore((state) => state.setBasicSpec)
+  const saveRingMeasurement = useRingDesignStore((state) => state.saveRingMeasurement)
   const [measureMode, setMeasureMode] = useState<MeasureMode>('finger')
   const [measureIndex, setMeasureIndex] = useState(5)
   const [liveMeasureIndex, setLiveMeasureIndex] = useState(5)
@@ -108,7 +108,12 @@ export function StudioMeasureNowScreen() {
           text: 'Save',
           style: 'default',
           onPress: () => {
-            setBasicSpec({ ring_size: liveMeasurement.size })
+            saveRingMeasurement({
+              name: measurementName.trim(),
+              size: liveMeasurement.size,
+              diameterMm: liveMeasurement.diameterMm,
+              mode: measureMode
+            })
             if (router.canGoBack()) router.back()
             else router.replace('/(screens)/ring-studio' as never)
           }
