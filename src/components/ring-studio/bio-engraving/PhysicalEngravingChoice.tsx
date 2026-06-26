@@ -40,13 +40,6 @@ function MarkChoiceRow({
             className='h-[2px] w-[2px] rounded-full'
             style={{ backgroundColor: isActive ? meta.accent : 'rgba(26, 54, 66, 0.3)' }}
           />
-          <Text
-            allowFontScaling={false}
-            className='font-sans-light text-[9px] uppercase tracking-[0.2em]'
-            style={{ color: isActive ? meta.accent : 'rgba(26, 54, 66, 0.6)' }}
-          >
-            {meta.subtitle}
-          </Text>
         </View>
 
         <Text allowFontScaling={false} className='mt-0.5 font-sans text-[12px] leading-5 text-ring-primary/80'>
@@ -70,28 +63,19 @@ export function PhysicalEngravingChoice() {
   if (selectedTypes.length < 2 || engravableTypes.length === 0) return null
 
   return (
-    <View className='gap-4'>
+    <View className='gap-2'>
       <View className='flex-row items-end justify-between gap-4'>
         <View className='flex-1'>
           <Text
             allowFontScaling={false}
-            className='font-sans-bold text-[9px] uppercase tracking-[0.3em] text-ring-accent'
+            className='mt-0.5 text-[10px] font-light uppercase leading-7 tracking-[0.32em] text-ring-primary'
           >
-            Physical Engraving
-          </Text>
-          <Text allowFontScaling={false} className='mt-2 font-serif text-[22px] leading-7 text-ring-primary'>
-            Choose one mark to engrave directly on the ring.
+            Choose 1 mark to engrave on the ring.
           </Text>
         </View>
-        <Text
-          allowFontScaling={false}
-          className='mb-1 font-sans text-[10px] uppercase tracking-[0.18em] text-ring-primary/45'
-        >
-          1 only
-        </Text>
       </View>
 
-      <View className='mt-2'>
+      <View className='-mt-1'>
         {engravableTypes.map((type) => (
           <MarkChoiceRow
             key={type}

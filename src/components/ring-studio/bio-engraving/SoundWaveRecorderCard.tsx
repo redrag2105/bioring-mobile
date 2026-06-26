@@ -1,3 +1,4 @@
+import { NoticeMessage } from '@/components/common/NoticeMessage'
 import { THEME } from '@/constants/theme'
 import { FolderUp, Info, Mic2 } from 'lucide-react-native'
 import { useState } from 'react'
@@ -105,9 +106,7 @@ export function SoundWaveRecorderCard({
             {(durationMillis / 1000).toFixed(1)}s captured
           </Text>
         ) : null}
-        {recordingError ? (
-          <Text className='text-center font-sans text-[11px] leading-4 text-red-700'>{recordingError}</Text>
-        ) : null}
+        {recordingError ? <NoticeMessage message={recordingError} variant='error' className='mt-2 w-full' /> : null}
       </View>
     </View>
   )

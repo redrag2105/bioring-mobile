@@ -1,12 +1,14 @@
+import { NoticeMessage } from '@/components/common/NoticeMessage'
+import { PriceText } from '@/components/common/PriceText'
 import { Canvas3D } from '@/components/ring-studio/Canvas3D'
+import { StudioHeader } from '@/components/ring-studio/StudioHeader'
 import { SoundWavePlaybackControls } from '@/components/ring-studio/bio-engraving/SoundWaveTrimDeck'
 import { useSoundWavePlayback } from '@/components/ring-studio/bio-engraving/useSoundWavePlayback'
-import { THEME } from '@/constants/theme'
+import { DESIGN_CONTENT_PANEL_HEIGHT } from '@/constants/designLayout'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
-import { PriceText } from '@/components/common/PriceText'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react-native'
+import { ArrowRight } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -102,7 +104,7 @@ function BioPreviewSection() {
       </Text>
       <BioPreviewStrip />
       <SoundWavePlaybackControls activePlaybackMode={activePlaybackMode} onPreviewPress={handleSummaryPreviewPress} />
-      {playbackError ? <Text className='font-sans text-[11px] leading-4 text-red-500'>{playbackError}</Text> : null}
+      {playbackError ? <NoticeMessage message={playbackError} variant='error' /> : null}
     </View>
   )
 }
@@ -125,12 +127,9 @@ function SummaryRow({ label, value, multiline = false }: { label: string; value:
 function SummaryHeader() {
   return (
     <View className='border-b border-ring-primary/10 px-5 pb-3 pt-4'>
-      <View className='flex-row items-center justify-between'>
-        <View>
-          <Text className='font-sans-bold text-[8px] uppercase tracking-[0.32em] text-ring-accent'>03 Full Review</Text>
-          <Text className='mt-0.5 font-serif text-[27px] leading-8 text-ring-primary'>Design Summary</Text>
-        </View>
-        <CheckCircle2 color={THEME.ringAccent} size={24} strokeWidth={1.4} />
+      <View>
+        <Text className='font-sans-bold text-[8px] uppercase tracking-[0.32em] text-ring-accent'>03 Full Review</Text>
+        <Text className='mt-1 font-serif text-[27px] leading-8 text-ring-primary'>Design Summary</Text>
       </View>
     </View>
   )
@@ -140,16 +139,11 @@ function FulfillmentNotice() {
   const packageTypes = useRingDesignStore((state) => state.package_types)
   const onlySoundWave = packageTypes.length === 1 && packageTypes.includes('sound_wave')
 
-  return (
-    <View className='mt-5 flex-row items-start gap-3 rounded-[18px] border border-ring-accent/20 bg-ring-accent/5 px-4 py-4'>
-      <ShieldCheck color={THEME.ringAccent} size={17} strokeWidth={1.4} style={{ marginTop: 1 }} />
-      <Text className='flex-1 font-sans text-[12px] leading-5 text-ring-primary/70'>
-        {onlySoundWave
-          ? 'Your selected 3-second SoundWave will be used for the physical engraving.'
-          : 'Selected biometric data will be captured at the Atelier. The saved position, scale, and rotation will guide final data mapping.'}
-      </Text>
-    </View>
-  )
+  const message = onlySoundWave
+    ? 'Your selected 3-second SoundWave will be used for the physical engraving.'
+    : 'We capture biometric data at the Atelier. The saved position, scale, and rotation will be used to map the final layout.'
+
+  return <NoticeMessage message={message} variant={onlySoundWave ? 'info' : 'warning'} className='mt-5' />
 }
 
 export function DesignReviewScreen() {
@@ -180,18 +174,13 @@ export function DesignReviewScreen() {
       />
 
       <SafeAreaView className='z-20 flex-1' edges={['top']}>
-        <View className='z-30 flex-row items-center justify-between px-5 pt-1'>
-          <Pressable
-            onPress={handleBack}
-            className='h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/65 shadow-sm shadow-ring-primary/10 active:opacity-75'
-          >
-            <ArrowLeft color={THEME.ringPrimary} size={18} strokeWidth={1.5} />
-          </Pressable>
-          <View className='h-9 w-9' />
-        </View>
+        <StudioHeader onBack={handleBack} eyebrow='Review' title='Design Summary' />
 
         <View className='flex-1 justify-end px-0' style={{ paddingBottom: 0 }}>
-          <View className='max-h-[75%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/70 shadow-2xl shadow-ring-primary/15'>
+          <View
+            className='overflow-hidden rounded-t-[34px] border border-white/70 bg-white/70 shadow-2xl shadow-ring-primary/15'
+            style={{ height: DESIGN_CONTENT_PANEL_HEIGHT }}
+          >
             <LinearGradient colors={['rgba(255,255,255,0.96)', 'rgba(248,247,245,0.8)']} className='absolute inset-0' />
             <SummaryHeader />
             <ScrollView
@@ -236,14 +225,14 @@ export function DesignReviewScreen() {
             <Text className='font-sans-bold text-[8px] uppercase tracking-[0.22em] text-ring-primary/45'>
               Final Estimate
             </Text>
-            <PriceText value={estimatedPrice} className='text-[20px] leading-6 text-ring-primary' />
+            <PriceText value={estimatedPrice} className='pt-2 text-[20px] leading-6 text-ring-primary' />
           </View>
 
           <Pressable
             onPress={() => router.push('/(screens)/memory-card-design' as never)}
             className='h-[44px] flex-row items-center gap-2.5 rounded-full bg-ring-primary px-5 shadow-lg shadow-ring-primary/25 active:opacity-85'
           >
-            <Text className='font-sans-bold text-[9px] uppercase tracking-[0.2em] text-white'>Confirm & Next</Text>
+            <Text className='font-sans-bold text-[9px] uppercase tracking-[0.2em] text-white'>Confirm</Text>
             <ArrowRight color='#FFFFFF' size={16} strokeWidth={1.5} />
           </Pressable>
         </View>

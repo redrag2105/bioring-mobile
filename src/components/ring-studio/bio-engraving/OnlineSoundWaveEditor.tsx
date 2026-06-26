@@ -1,5 +1,4 @@
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
-import * as DocumentPicker from 'expo-document-picker'
 import {
   RecordingPresets,
   createAudioPlayer,
@@ -8,8 +7,9 @@ import {
   useAudioRecorder,
   useAudioRecorderState
 } from 'expo-audio'
+import * as DocumentPicker from 'expo-document-picker'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Animated, Easing, Text, View } from 'react-native'
+import { Animated, Easing, View } from 'react-native'
 import { LayoutSliderGroup } from './EngravingControls'
 import { SoundWaveRecorderCard } from './SoundWaveRecorderCard'
 import { SoundWaveTrimDeck } from './SoundWaveTrimDeck'
@@ -275,14 +275,6 @@ export function OnlineSoundWaveEditor({
 
   return (
     <View className='gap-5'>
-      {!allowCapture ? (
-        <View className='rounded-[18px] border border-ring-accent/20 bg-ring-accent/5 px-4 py-3'>
-          <Text className='font-sans text-[11px] leading-5 text-ring-primary/75'>
-            SoundWave is used as the visual engraving mark for this package. Recording and upload are available only when SoundWave is the only selected package.
-          </Text>
-        </View>
-      ) : null}
-
       {allowCapture ? (
         <SoundWaveRecorderCard
           isPreparing={isPreparing}

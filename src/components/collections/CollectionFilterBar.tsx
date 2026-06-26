@@ -315,6 +315,7 @@ export function CollectionFilterBar({
 
           {/* Ô Nhập số (Input Fields) */}
           <View className='flex-row items-center justify-between'>
+            {/* --- Ô NHẬP MIN PRICE --- */}
             <View className='flex-1 border-b border-ring-accent/20 pb-1'>
               <View className='flex-row items-center'>
                 <TextInput
@@ -324,18 +325,22 @@ export function CollectionFilterBar({
                   keyboardType='numeric'
                   returnKeyType='done'
                   allowFontScaling={false}
-                  className='font-serif m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
+                  textAlign='right' // <--- THÊM CĂN PHẢI TẠI ĐÂY
+                  // Đổi w-24 thành flex-1 để tự động chiếm hết khoảng trống
+                  className='m-0 flex-1 p-0 font-serif text-[15px] tracking-wider text-ring-primary'
                 />
-                <Text allowFontScaling={false} className='ml-1 font-sans text-[15px] text-ring-primary/50'>
-                  đ
+                <Text allowFontScaling={false} className='ml-1.5 font-sans text-[15px] text-ring-primary/50'>
+                  VND
                 </Text>
               </View>
             </View>
 
+            {/* Đường gạch ngang ở giữa */}
             <View className='mx-4 mt-2 h-[1px] w-4 bg-ring-primary/20' />
 
+            {/* --- Ô NHẬP MAX PRICE --- */}
             <View className='flex-1 items-end border-b border-ring-accent/20 pb-1'>
-              <View className='flex-row items-center'>
+              <View className='w-full flex-row items-center'>
                 <TextInput
                   value={maxInputText}
                   onChangeText={setMaxInputText}
@@ -343,11 +348,12 @@ export function CollectionFilterBar({
                   keyboardType='numeric'
                   returnKeyType='done'
                   allowFontScaling={false}
-                  textAlign='right'
-                  className='font-serif m-0 w-24 p-0 text-[15px] tracking-wider text-ring-primary'
+                  textAlign='right' // <--- GIỮ NGUYÊN CĂN PHẢI
+                  // Đổi w-24 thành flex-1
+                  className='m-0 flex-1 p-0 font-serif text-[15px] tracking-wider text-ring-primary'
                 />
-                <Text allowFontScaling={false} className='ml-1 font-sans text-[15px] text-ring-primary/50'>
-                  đ
+                <Text allowFontScaling={false} className='ml-1.5 font-sans text-[15px] text-ring-primary/50'>
+                  VND
                 </Text>
               </View>
             </View>
@@ -371,7 +377,8 @@ export function CollectionFilterBar({
             <GestureDetector gesture={minPan}>
               <Animated.View
                 style={minThumbStyle}
-                className='absolute bottom-[2px] h-8 w-8 items-center justify-center bg-transparent'
+                // Sửa bottom-[2px] thành -bottom-[6px]
+                className='absolute -bottom-[4px] h-8 w-8 items-center justify-center bg-transparent'
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <RingThumb />
@@ -382,7 +389,8 @@ export function CollectionFilterBar({
             <GestureDetector gesture={maxPan}>
               <Animated.View
                 style={maxThumbStyle}
-                className='absolute bottom-[2px] h-8 w-8 items-center justify-center bg-transparent'
+                // Sửa bottom-[2px] thành -bottom-[6px]
+                className='absolute -bottom-[4px] h-8 w-8 items-center justify-center bg-transparent'
                 hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <RingThumb />

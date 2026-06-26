@@ -1,10 +1,11 @@
-import { MemoryCardListItem } from '@/components/memory/MemoryCardListItem'
+import { MemoryPosterCatalogItem } from '@/components/memory/MemoryPosterCatalogItem'
 import { MemoryQrScannerModal } from '@/components/memory/MemoryQrScannerModal'
+import { ScreenHeader } from '@/components/screen/ScreenHeader'
 import { THEME } from '@/constants/theme'
-import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
 import { useMemoryCardsQuery } from '@/hooks/queries/useMemoryCardsQuery'
+import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
 import { LinearGradient } from 'expo-linear-gradient'
-import { QrCode, Sparkles } from 'lucide-react-native'
+import { QrCode } from 'lucide-react-native'
 import { useState } from 'react'
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -20,100 +21,90 @@ export function MemoryScreen() {
   }
 
   return (
-    <View className='flex-1 bg-ring-background'>
+    <View className='flex-1 bg-[#F4F1EC]'>
+      {/* =========================================================
+          BACKGROUND: ABSTRACT HALO
+      ========================================================= */}
+
+      {/* 1. Halo Effect (Hào quang) - Những khối tròn mờ ảo tạo chiều sâu */}
+      <View className='absolute -left-[20%] -top-[10%] h-[120vw] w-[120vw] rounded-full bg-[#EBE5D9] opacity-70' />
+      <View className='absolute -bottom-[10%] -right-[20%] h-[100vw] w-[100vw] rounded-full bg-[#FCFAF6] opacity-90' />
+
+      {/* 2. Gradient sương mù che phủ nhẹ chân màn hình */}
+      <LinearGradient
+        colors={['rgba(244,241,236,0)', 'rgba(244,241,236,0.95)']}
+        className='absolute bottom-0 left-0 right-0 z-10 h-40'
+        pointerEvents='none'
+      />
+
       <SafeAreaView className='flex-1' edges={['top']}>
-        <View className='flex-row items-start justify-between px-5 pb-3 pt-4'>
-          <View className='flex-1 pr-4'>
-            <Text allowFontScaling={false} className='font-sans-bold text-xs uppercase tracking-wider text-txt-muted'>
-              Memory vault
-            </Text>
-            <Text allowFontScaling={false} className='mt-2 font-serif-semibold text-[28px] leading-9 text-txt-main'>
-              Memory <Text className='font-serif-italic text-ring-accent'>Cards</Text>
-            </Text>
-          </View>
+        {/* HEADER & NÚT SCAN QUYỀN LỰC */}
+        <View className='relative z-20 pb-2'>
+          <ScreenHeader eyebrow='Memory Card' title='Poster' accent='Collection' />
 
           <Pressable
             accessibilityRole='button'
             accessibilityLabel='Scan QR code'
             onPress={() => setScannerVisible(true)}
-            className='h-11 w-11 items-center justify-center rounded-full border border-ring-accent/20 bg-white shadow-sm shadow-ring-primary/5'
-            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+            className='absolute right-5 top-4 h-11 w-11 items-center justify-center rounded-full border border-ring-primary/10 bg-white/70 shadow-sm shadow-ring-primary/5'
+            style={({ pressed }) => ({
+              opacity: pressed ? 0.6 : 1,
+              transform: [{ scale: pressed ? 0.95 : 1 }]
+            })}
           >
-            <QrCode color={THEME.ringPrimary} size={20} strokeWidth={1.7} />
+            <QrCode color={THEME.ringPrimary} size={19} strokeWidth={1.5} />
+            <View className='absolute right-[10px] top-[10px] h-1.5 w-1.5 rounded-full bg-ring-accent' />
           </Pressable>
         </View>
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          className='flex-1'
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        >
-          <View className='gap-8 px-5 pb-40'>
-            <View className='elevation-2 overflow-hidden rounded-[28px] border border-white/70 shadow-lg shadow-ring-primary/10'>
-              <LinearGradient
-                colors={['#FFFFFF', '#F7F5EF', '#EEF3EF']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                className='absolute inset-0'
-              />
-              <View className='absolute -right-8 -top-8 h-32 w-32 rounded-full bg-ring-accent/10' />
-              <View className='gap-4 p-6'>
-                <View className='h-12 w-12 items-center justify-center rounded-full bg-ring-accent/10'>
-                  <Sparkles color={THEME.ringAccent} size={19} strokeWidth={1.6} />
-                </View>
+        {/* CONTAINER PHẦN BODY */}
+        <View className='relative flex-1'>
+          {/* DANH SÁCH POSTER */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            className='z-10 flex-1'
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
+            <View className='px-5 pb-48 pt-4'>
+              <View className='gap-5'>
+                {memoryCards.length > 0 ? (
+                  /* Grid so le (Offset) tạo cảm giác nghệ thuật tự do */
+                  <View className='flex-row flex-wrap justify-between pt-2'>
+                    {memoryCards.map((memoryCard, index) => (
+                      <MemoryPosterCatalogItem key={memoryCard.id} memoryCard={memoryCard} index={index} />
+                    ))}
+                  </View>
+                ) : (
+                  /* EMPTY STATE: "Hanging Plaque" (Bảng tên mái vòm treo lơ lửng) */
+                  <View className='relative mt-16 w-[80%] items-center self-center rounded-t-full border border-ring-primary/10 bg-[#FCFAF6]/90 px-6 pb-14 pt-16 shadow-xl shadow-ring-primary/5'>
+                    {/* Sợi dây treo ảo giác */}
+                    <View className='absolute -top-16 left-1/2 h-16 w-[1px] bg-ring-primary/20' />
 
-                <View>
-                  <Text
-                    allowFontScaling={false}
-                    className='font-sans-bold text-[10px] uppercase tracking-[0.24em] text-ring-accent'
-                  >
-                    Activated memories
-                  </Text>
-                  <Text allowFontScaling={false} className='mt-2 font-serif text-[30px] leading-9 text-ring-primary'>
-                    Keep every story close
-                  </Text>
-                  <Text allowFontScaling={false} className='mt-3 font-sans text-[14px] leading-6 text-txt-muted'>
-                    Scan a Bioring QR code to activate a memory card, then revisit each linked ring and its story here.
-                  </Text>
-                </View>
+                    {/* Đinh tán / Điểm neo */}
+                    <View className='mb-8 h-2.5 w-2.5 rounded-full border border-ring-accent bg-transparent' />
+
+                    <Text
+                      allowFontScaling={false}
+                      className='text-center font-serif text-[28px] font-light leading-[34px] tracking-wide text-ring-primary'
+                    >
+                      An Empty{'\n'}Exhibition
+                    </Text>
+
+                    <View className='my-6 h-[1px] w-8 bg-ring-primary/20' />
+
+                    <Text
+                      allowFontScaling={false}
+                      className='text-center font-sans text-[11px] leading-5 tracking-wide text-ring-primary/50'
+                    >
+                      This space is reserved for your activated artworks. Tap the scanner to curate your first piece.
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
-
-            <View className='gap-4'>
-              <View className='flex-row items-end justify-between'>
-                <View>
-                  <Text allowFontScaling={false} className='font-sans-bold text-[10px] uppercase tracking-[0.24em] text-ring-accent'>
-                    QR linked
-                  </Text>
-                  <Text allowFontScaling={false} className='mt-1 font-serif text-[24px] leading-8 text-ring-primary'>
-                    Activated Cards
-                  </Text>
-                </View>
-                <Text allowFontScaling={false} className='font-sans-bold text-[11px] uppercase tracking-wider text-txt-muted'>
-                  {memoryCards.length} items
-                </Text>
-              </View>
-
-              {memoryCards.length > 0 ? (
-                <View className='gap-3'>
-                  {memoryCards.map((memoryCard) => (
-                    <MemoryCardListItem key={memoryCard.id} memoryCard={memoryCard} />
-                  ))}
-                </View>
-              ) : (
-                <View className='items-center rounded-[24px] border border-ring-primary/10 bg-white/70 p-6'>
-                  <Text allowFontScaling={false} className='text-center font-serif text-[24px] leading-8 text-ring-primary'>
-                    No memory cards yet
-                  </Text>
-                  <Text allowFontScaling={false} className='mt-2 text-center font-sans text-[13px] leading-5 text-txt-muted'>
-                    Tap the QR icon above to activate your first Bioring memory card.
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </SafeAreaView>
 
       <MemoryQrScannerModal

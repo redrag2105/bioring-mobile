@@ -1,6 +1,5 @@
+import { NoticeMessage } from '@/components/common/NoticeMessage'
 import { PositionSlider } from '@/components/ring-studio/PositionSlider'
-import { THEME } from '@/constants/theme'
-import { ShieldCheck } from 'lucide-react-native'
 import { Pressable, Text, View } from 'react-native'
 import { PLACEMENTS } from './bioEngravingConfig'
 
@@ -16,16 +15,11 @@ type LayoutSliderGroupProps = {
 }
 
 export function EngravingNotice({ onlySoundWave }: { onlySoundWave: boolean }) {
-  return (
-    <View className='flex-row items-center gap-3 rounded-[8px] border-[0.5px] border-ring-primary/10 bg-ring-surface px-4 py-3.5'>
-      <ShieldCheck color={THEME.ringAccent} size={16} strokeWidth={1.2} />
-      <Text allowFontScaling={false} className='flex-1 font-sans text-[11px] leading-4 text-ring-primary/80'>
-        {onlySoundWave
-          ? 'The highlighted 3-second SoundWave segment will be rendered on the ring preview.'
-          : 'Real biometric data will be captured offline. Saved position, scale, and rotation are used for final mapping.'}
-      </Text>
-    </View>
-  )
+  const message = onlySoundWave
+    ? 'The highlighted 3-second SoundWave segment will be rendered on the ring preview.'
+    : 'Real biometric data will be captured offline. Saved position, scale, and rotation are used for final mapping.'
+
+  return <NoticeMessage message={message} variant={onlySoundWave ? 'info' : 'warning'} />
 }
 
 export function PlacementControl({

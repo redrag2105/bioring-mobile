@@ -1,14 +1,14 @@
-import { BasicSpecsPanel } from '@/components/ring-studio/BasicSpecsPanel'
 import { PriceText } from '@/components/common/PriceText'
+import { BasicSpecsPanel } from '@/components/ring-studio/BasicSpecsPanel'
 import { Canvas3D } from '@/components/ring-studio/Canvas3D'
 import { PackageSelector } from '@/components/ring-studio/PackageSelector'
 import { StudioHeader } from '@/components/ring-studio/StudioHeader'
 import { StudioStepIndicator } from '@/components/ring-studio/StudioStepIndicator'
-import { THEME } from '@/constants/theme'
+import { DESIGN_CONTENT_PANEL_HEIGHT, DESIGN_CONTENT_PANEL_KEYBOARD_HEIGHT } from '@/constants/designLayout'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { ArrowRight, Gem } from 'lucide-react-native'
+import { ArrowRight } from 'lucide-react-native'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -39,7 +39,7 @@ function StickyFooter({ onAction }: { onAction: () => void }) {
           <Text className='font-sans-bold text-[8px] uppercase tracking-[0.22em] text-ring-primary/45'>
             Estimated Price
           </Text>
-          <PriceText value={estimatedPrice} className='text-[20px] leading-6 text-ring-primary' />
+          <PriceText value={estimatedPrice} className='pt-2 text-[20px] leading-6 text-ring-primary' />
         </View>
 
         <Pressable
@@ -122,13 +122,12 @@ export function RingStudioScreen() {
         keyboardVerticalOffset={0}
       >
         <SafeAreaView className='flex-1' edges={['top']}>
-          <StudioHeader onBack={handleBack} />
+          <StudioHeader onBack={handleBack} eyebrow='Bioring' title='Studio' />
 
           <View className='flex-1 justify-end px-0' style={{ paddingBottom: isKeyboardVisible ? 8 : 0 }}>
             <View
-              className={`overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15 ${
-                isKeyboardVisible ? 'max-h-[84%]' : 'max-h-[75%]'
-              }`}
+              className='overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15'
+              style={{ height: isKeyboardVisible ? DESIGN_CONTENT_PANEL_KEYBOARD_HEIGHT : DESIGN_CONTENT_PANEL_HEIGHT }}
             >
               <LinearGradient
                 colors={['rgba(255,255,255,0.92)', 'rgba(248,247,245,0.74)']}
@@ -142,9 +141,6 @@ export function RingStudioScreen() {
                       {panelTitle}
                     </Text>
                     <Text className='mt-0.5 font-serif text-[27px] leading-8 text-ring-primary'>Bioring Studio</Text>
-                  </View>
-                  <View className='h-9 w-9 items-center justify-center rounded-full border border-ring-accent/20 bg-ring-accent/10'>
-                    <Gem color={THEME.ringAccent} size={16} strokeWidth={1.4} />
                   </View>
                 </View>
 

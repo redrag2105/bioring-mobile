@@ -200,7 +200,9 @@ export function StudioFabButton({ focused, isSticky, onPress }: StudioFabButtonP
         <Text
           className={`font-sans-medium text-[11px] tracking-wide ${focused ? 'text-ring-accent' : 'text-txt-muted'}`}
           numberOfLines={1}
-        ></Text>
+        >
+          Studio
+        </Text>
       )}
     </TouchableOpacity>
   )

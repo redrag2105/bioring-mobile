@@ -121,9 +121,9 @@ export function EditableTextLayer({
         </Text>
         <Pressable
           onPress={() => setIsEditing(true)}
-          className='absolute -right-2 -top-2 h-6 w-6 items-center justify-center rounded-full border border-white/70 bg-white/85 active:opacity-75'
+          className='absolute -right-1.5 -top-1.5 h-6 w-6 items-center justify-center rounded-full border border-ring-accent/25 bg-white/80 shadow-sm shadow-ring-primary/5 active:opacity-70'
         >
-          <Pencil color='#1A3642' size={11} strokeWidth={1.4} />
+          <Pencil color='#B69B7A' size={10} strokeWidth={1.35} />
         </Pressable>
         {showCounter ? (
           <View className='absolute -bottom-5 right-0 rounded-full bg-white/80 px-2 py-0.5'>
@@ -151,11 +151,11 @@ export function EditableTextLayer({
         scrollEnabled={false}
         blurOnSubmit
         maxLength={showCounter ? POSTER_MESSAGE_MAX_CHARS : undefined}
-        className='m-0 h-full w-full bg-white/20 p-0'
+        className='m-0 h-full w-full bg-white/35 p-0'
         style={textStyle(frame, canvasWidth)}
       />
-      <View className='absolute -right-2 -top-2 h-6 w-6 items-center justify-center rounded-full border border-white/70 bg-white/85'>
-        <Pencil color='#1A3642' size={11} strokeWidth={1.4} />
+      <View className='absolute -right-1.5 -top-1.5 h-6 w-6 items-center justify-center rounded-full border border-ring-accent/25 bg-white/80 shadow-sm shadow-ring-primary/5'>
+        <Pencil color='#B69B7A' size={10} strokeWidth={1.35} />
       </View>
       {showCounter ? (
         <View className='absolute -bottom-5 right-0 rounded-full bg-white/80 px-2 py-0.5'>
@@ -276,7 +276,7 @@ export function PosterPhotoLayer({
         <Pressable
           onPress={onPickImage}
           disabled={isPicking}
-          className='absolute right-3 top-3 h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/90 active:opacity-75'
+          className='absolute right-3 top-3 h-9 w-9 items-center justify-center rounded-full border border-ring-primary/10 bg-white/90 shadow-sm shadow-ring-primary/10 active:opacity-75'
         >
           {isPicking ? <ActivityIndicator color='#1A3642' size='small' /> : <Upload color='#1A3642' size={15} strokeWidth={1.5} />}
         </Pressable>

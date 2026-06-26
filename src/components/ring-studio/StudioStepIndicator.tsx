@@ -12,26 +12,50 @@ type StudioStepIndicatorProps = {
 }
 
 export function StudioStepIndicator({ activeTab, onChange }: StudioStepIndicatorProps) {
+  // Nền ngoài (Container): Bỏ viền (border) đi, chỉ dùng một lớp nền xám cực mỏng (`bg-ring-primary/5`)
+  // và giảm padding (`p-1`) để nó ôm sát lấy các viên pill bên trong, tạo cảm giác liền mạch.
   return (
-    <View className='flex-row items-center justify-between rounded-full border border-white/60 bg-white/40 p-1'>
+    <View className='flex-row items-center rounded-full bg-ring-primary/5 p-1'>
       {STEPS.map((step, index) => {
         const isActive = activeTab === step.id
+
+        // Nút bấm: Viên pill active sẽ là màu trắng nguyên bản, có viền siêu mảnh bên trong để phân tách.
+        const buttonClass = isActive
+          ? 'flex-1 flex-row items-center justify-center gap-3 rounded-full border-[0.5px] border-ring-primary/10 bg-white py-[9px]'
+          : 'flex-1 flex-row items-center justify-center gap-3 rounded-full border-[0.5px] border-transparent bg-transparent py-[9px]'
+
+        // Số thứ tự: Dùng font Serif, số active dùng màu Accent.
+        const numberClass = isActive
+          ? 'font-serif text-[13px] text-ring-accent'
+          : 'font-serif text-[13px] text-ring-primary/30'
+
+        // Đường kẻ dọc tinh xảo: Giữ nguyên để tạo điểm nhấn
+        const dividerClass = isActive
+          ? 'h-[14px] w-[0.5px] bg-ring-primary/20'
+          : 'h-[14px] w-[0.5px] bg-ring-primary/10'
+
+        // Label: Font Sans, tracking rộng, in hoa.
+        const labelClass = isActive
+          ? 'font-sans-medium text-[10px] uppercase tracking-[0.25em] text-ring-primary mt-[1px]'
+          : 'font-sans text-[10px] uppercase tracking-[0.25em] text-ring-primary/40 mt-[1px]'
+
         return (
           <Pressable
             key={step.id}
             onPress={() => onChange(step.id)}
-            className={`h-9 flex-1 flex-row items-center justify-center gap-1 rounded-full ${
-              isActive ? 'bg-ring-primary' : 'bg-transparent'
-            }`}
+            className={buttonClass}
+            style={({ pressed }) => ({
+              opacity: pressed && !isActive ? 0.6 : 1
+            })}
           >
-            <Text className={`font-serif text-[13px] ${isActive ? 'text-ring-accent' : 'text-ring-primary/35'}`}>
-              {index + 1}
+            <Text allowFontScaling={false} className={numberClass}>
+              0{index + 1}
             </Text>
-            <Text
-              className={`font-sans-bold text-[8px] uppercase tracking-[0.16em] ${
-                isActive ? 'text-white' : 'text-ring-primary/45'
-              }`}
-            >
+
+            {/* Đường kẻ dọc tinh xảo */}
+            <View className={dividerClass} />
+
+            <Text allowFontScaling={false} className={labelClass}>
               {step.label}
             </Text>
           </Pressable>

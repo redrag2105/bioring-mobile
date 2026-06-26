@@ -11,26 +11,22 @@ export const BIO_LABELS: Record<BioEngravingType, string> = {
 export const BIO_META: Record<
   BioEngravingType,
   {
-    subtitle: string
     description: string
     accent: string
     icon: typeof Mic2
   }
 > = {
   sound_wave: {
-    subtitle: 'Voice imprint',
     description: 'Use a mock waveform to reserve the 3-second engraving layout.',
     accent: THEME.ringAccent,
     icon: Mic2
   },
   fingerprint: {
-    subtitle: 'Ridge signature',
     description: 'A tactile ridge pattern prepared for a precise physical engraving.',
     accent: '#7D9A8F',
     icon: Fingerprint
   },
   heartbeat: {
-    subtitle: 'Pulse trace',
     description: 'A quiet rhythm line prepared for a personal engraved trace.',
     accent: '#B68178',
     icon: HeartPulse

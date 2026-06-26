@@ -37,6 +37,7 @@ export type MemoryCardDraft = {
   cardTitle: string
   secretMessage: string
   dateLabel: string
+  recipientEmail?: string
   reuseSoundWaveVoice: boolean
   templateId: string
   userPhotoUri?: string

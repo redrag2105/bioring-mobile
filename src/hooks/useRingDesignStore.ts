@@ -85,6 +85,7 @@ export const useRingDesignStore = create<RingDesignState>((set, get) => ({
     cardTitle: 'Our Keepsake',
     secretMessage: 'A small archive of the day our lives learned the same rhythm.',
     dateLabel: 'June 19, 2026',
+    recipientEmail: '',
     reuseSoundWaveVoice: true,
     templateId: 'artistic-landscape',
     userPhotoUri: undefined,

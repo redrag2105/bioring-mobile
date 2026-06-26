@@ -10,6 +10,8 @@ import type { Group, Mesh } from 'three'
 
 cssInterop(Canvas, { className: 'style' })
 
+const RING_MODEL_SCALE = 0.56
+
 function RingScene({ manualRotation }: { manualRotation: number }) {
   const ringRef = useRef<Group>(null)
   const gemRef = useRef<Mesh>(null)
@@ -67,7 +69,7 @@ function RingScene({ manualRotation }: { manualRotation: number }) {
       <directionalLight position={[3, 3, 5]} intensity={2.2} color='#FFF4E4' />
       <directionalLight position={[-4, -2, 3]} intensity={0.7} color='#DCEBFF' />
 
-      <group ref={ringRef} rotation={[0.72, manualRotation, 0.05]} scale={0.62}>
+      <group ref={ringRef} rotation={[0.72, manualRotation, 0.05]} scale={RING_MODEL_SCALE}>
         <mesh>
           <torusGeometry args={[1.58, 0.18, 48, 128]} />
           <meshStandardMaterial color='#D7C4A4' metalness={1} roughness={0.2} />

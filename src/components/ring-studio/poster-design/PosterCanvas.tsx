@@ -70,7 +70,9 @@ export function PosterCanvas({
   })
   const rootClassName = fullScreen
     ? 'flex-1 w-full overflow-hidden bg-white'
-    : 'aspect-[3/4] w-full overflow-hidden rounded-[24px] bg-white shadow-xl shadow-ring-primary/10'
+    : previewMode
+      ? 'aspect-[3/4.18] w-full overflow-hidden bg-white shadow-xl shadow-ring-primary/10'
+      : 'aspect-[3/4] w-full overflow-hidden bg-white shadow-xl shadow-ring-primary/10'
 
   const handlePickImage = useCallback(async () => {
     if (isReadOnlyPreview) return

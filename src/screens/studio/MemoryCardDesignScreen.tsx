@@ -1,10 +1,9 @@
 import { PosterTemplateGallery } from '@/components/ring-studio/poster-design/PosterTemplateGallery'
-import { THEME } from '@/constants/theme'
+import { StudioHeader } from '@/components/ring-studio/StudioHeader'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, Images } from 'lucide-react-native'
 import { useCallback } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export function MemoryCardDesignScreen() {
@@ -16,27 +15,17 @@ export function MemoryCardDesignScreen() {
   }, [router])
 
   return (
-    <View className='flex-1 bg-ring-background'>
+    <View className='flex-1 bg-[#F8F6F0]'>
+      <LinearGradient colors={['#FFFFFF', '#F2EFE9', '#E6E0D4']} locations={[0, 0.4, 1]} className='absolute inset-0' />
       <LinearGradient
-        colors={['#FDFDFB', '#F5F0E8', '#E9E1D4']}
-        locations={[0, 0.52, 1]}
-        className='absolute inset-0'
+        colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 0.45 }}
+        className='absolute left-0 right-0 top-0 h-[350px]'
       />
 
       <SafeAreaView className='flex-1' edges={['top']}>
-        <View className='z-30 flex-row items-center justify-between px-5 pt-2'>
-          <Pressable
-            onPress={handleBack}
-            className='h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/65 shadow-sm shadow-ring-primary/10 active:opacity-75'
-          >
-            <ArrowLeft color={THEME.ringPrimary} size={21} strokeWidth={1.5} />
-          </Pressable>
-          <Text className='font-sans-bold text-[9px] uppercase tracking-[0.3em] text-ring-primary/45'>Poster Design</Text>
-          <View className='h-11 w-11 items-center justify-center rounded-full border border-ring-accent/20 bg-ring-accent/10'>
-            <Images color={THEME.ringAccent} size={18} strokeWidth={1.4} />
-          </View>
-        </View>
-
+        <StudioHeader onBack={handleBack} eyebrow='Memory Card' title='Poster Collection' />
         <PosterTemplateGallery />
       </SafeAreaView>
     </View>

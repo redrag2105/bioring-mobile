@@ -1,11 +1,11 @@
-import { PosterEditor } from '@/components/ring-studio/poster-design/PosterEditor'
 import { PriceText } from '@/components/common/PriceText'
-import { THEME } from '@/constants/theme'
+import { PosterEditor } from '@/components/ring-studio/poster-design/PosterEditor'
+import { StudioHeader } from '@/components/ring-studio/StudioHeader'
 import { useSaveDesignDraftMutation } from '@/hooks/mutations/useSaveDesignDraftMutation'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
 import { cropPosterPhoto } from '@/utils/cropPosterPhoto'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, ArrowRight } from 'lucide-react-native'
+import { ArrowRight } from 'lucide-react-native'
 import { useCallback, useState } from 'react'
 import { KeyboardAvoidingView, Platform, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -52,13 +52,8 @@ export function PosterDesignEditorScreen() {
         <PosterEditor />
       </KeyboardAvoidingView>
 
-      <SafeAreaView edges={['top']} className='absolute left-0 right-0 top-0 z-40 px-5 pt-2'>
-        <Pressable
-          onPress={handleBack}
-          className='h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/80 shadow-sm shadow-ring-primary/10 active:opacity-75'
-        >
-          <ArrowLeft color={THEME.ringPrimary} size={21} strokeWidth={1.5} />
-        </Pressable>
+      <SafeAreaView edges={['top']} className='absolute left-0 right-0 top-0 z-40'>
+        <StudioHeader onBack={handleBack} eyebrow='Memory Card' />
       </SafeAreaView>
 
       <SafeAreaView

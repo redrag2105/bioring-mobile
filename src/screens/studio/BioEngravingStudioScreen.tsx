@@ -1,11 +1,12 @@
-import { BioEngravingStudio } from '@/components/ring-studio/BioEngravingStudio'
 import { PriceText } from '@/components/common/PriceText'
+import { BioEngravingStudio } from '@/components/ring-studio/BioEngravingStudio'
 import { Canvas3D } from '@/components/ring-studio/Canvas3D'
 import { StudioHeader } from '@/components/ring-studio/StudioHeader'
+import { DESIGN_CONTENT_PANEL_HEIGHT } from '@/constants/designLayout'
 import { useRingDesignStore } from '@/hooks/useRingDesignStore'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
-import { ArrowRight, PenLine } from 'lucide-react-native'
+import { ArrowRight } from 'lucide-react-native'
 import { useCallback } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -35,7 +36,7 @@ function EngravingFooter({
           <Text className='font-sans-bold text-[8px] uppercase tracking-[0.22em] text-ring-primary/45'>
             Studio Total
           </Text>
-          <PriceText value={estimatedPrice} className='text-[19px] leading-6 text-ring-primary' />
+          <PriceText value={estimatedPrice} className='pt-2 text-[19px] leading-6 text-ring-primary' />
         </View>
 
         <Pressable
@@ -89,10 +90,13 @@ export function BioEngravingStudioScreen() {
       />
 
       <SafeAreaView className='z-20 flex-1' edges={['top']}>
-        <StudioHeader onBack={handleBack} />
+        <StudioHeader onBack={handleBack} eyebrow='Bioring' title='Studio' />
 
         <View className='flex-1 justify-end px-0' style={{ paddingBottom: 0 }}>
-          <View className='max-h-[75%] overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15'>
+          <View
+            className='overflow-hidden rounded-t-[34px] border border-white/70 bg-white/65 shadow-2xl shadow-ring-primary/15'
+            style={{ height: DESIGN_CONTENT_PANEL_HEIGHT }}
+          >
             <LinearGradient
               colors={['rgba(255,255,255,0.92)', 'rgba(248,247,245,0.74)']}
               className='absolute inset-0'
@@ -104,18 +108,15 @@ export function BioEngravingStudioScreen() {
                   <Text className='font-sans-bold text-[8px] uppercase tracking-[0.32em] text-ring-accent'>
                     03 Bio-Engraving Studio
                   </Text>
-                  <Text className='mt-0.5 font-serif text-[28px] leading-8 text-ring-primary'>Engraving Tools</Text>
-                </View>
-                <View className='h-9 w-9 items-center justify-center rounded-full border border-ring-accent/20 bg-ring-accent/10'>
-                  <PenLine color='#B69B7A' size={16} strokeWidth={1.4} />
+                  <Text className='mt-2 font-serif text-[28px] leading-8 text-ring-primary'>Engraving Tools</Text>
                 </View>
               </View>
             </View>
 
             <ScrollView
               showsVerticalScrollIndicator={false}
-              className='px-5'
-              contentContainerStyle={{ paddingBottom: insets.bottom + 98, paddingTop: 22 }}
+              className='flex-1 px-5'
+              contentContainerStyle={{ paddingBottom: insets.bottom + 98, paddingTop: 12 }}
             >
               <BioEngravingStudio />
             </ScrollView>

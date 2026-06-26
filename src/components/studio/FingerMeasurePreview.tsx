@@ -24,7 +24,7 @@ export function FingerMeasurePreview({ diameter, diameterMm, size }: FingerMeasu
       pointerEvents='none'
       style={{ height: PREVIEW_HEIGHT, minHeight: PREVIEW_HEIGHT, flexShrink: 0 }}
     >
-      {/* 1. Background Sạch & Sang trọng hơn (Trắng -> Kem nhạt) */}
+      {/* 1. Background */}
       <LinearGradient
         colors={['#FFFFFF', '#FCFAFC', '#F4EFEB']}
         start={{ x: 0, y: 0 }}
@@ -32,7 +32,7 @@ export function FingerMeasurePreview({ diameter, diameterMm, size }: FingerMeasu
         className='absolute inset-0'
       />
 
-      {/* 2. Tiêu đề (Đã bỏ đường kẻ ngang, đổi Live Width sang màu Accent) */}
+      {/* 2. Tiêu đề */}
       <View className='absolute left-0 right-0 top-4 items-center px-5' pointerEvents='none'>
         <Text
           allowFontScaling={false}

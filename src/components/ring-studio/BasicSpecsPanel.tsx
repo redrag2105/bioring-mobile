@@ -3,7 +3,7 @@ import { useRingDesignStore } from '@/hooks/useRingDesignStore'
 import { useFocusEffect } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Keyboard, ScrollView, Text, View } from 'react-native'
+import { Keyboard, ScrollView, View } from 'react-native'
 import { GemstonePicker } from './basic-specs/GemstonePicker'
 import { MaterialPicker } from './basic-specs/MaterialPicker'
 import { RingSizePicker } from './basic-specs/RingSizePicker'
@@ -77,18 +77,6 @@ export function BasicSpecsPanel() {
 
   return (
     <View className='gap-8 pb-2'>
-      <View>
-        <Text
-          allowFontScaling={false}
-          className='font-sans-bold text-[9px] uppercase tracking-[0.3em] text-ring-accent'
-        >
-          Specs
-        </Text>
-        <Text allowFontScaling={false} className='mt-2 font-serif text-[22px] leading-7 text-ring-primary'>
-          Material, stone and fit.
-        </Text>
-      </View>
-
       <MaterialPicker
         selectedMaterialId={selectedMaterialId}
         onSelect={(materialId) => setBasicSpec({ selected_material_id: materialId })}

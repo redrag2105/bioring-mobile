@@ -15,8 +15,8 @@ export function PriceText({ value, className = '', prefix, prefixClassName = 'fo
   return (
     <Text allowFontScaling={false} className={className}>
       {prefix ? <Text className={prefixClassName}>{prefix}</Text> : null}
-      <Text className='font-serif'>{formatPriceNumber(value)}</Text>
-      <Text className='font-sans'> đ</Text>
+      <Text className='font-serif-semibold'>{formatPriceNumber(value)}</Text>
+      <Text className='font-serif'> VND</Text>
     </Text>
   )
 }
