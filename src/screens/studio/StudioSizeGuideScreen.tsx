@@ -1,6 +1,7 @@
+import { BackButton } from '@/components/navigation/BackButton'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, Flame, Ruler } from 'lucide-react-native'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { Flame, Ruler } from 'lucide-react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { STUDIO_SIZE_GUIDE_STEPS, STUDIO_SIZE_TABLE } from '@/constants/staticContent'
@@ -22,17 +23,11 @@ export function StudioSizeGuideScreen() {
       <SafeAreaView className='flex-1' edges={['top', 'bottom']}>
         {/* HEADER: Clean & Transparent */}
         <View className='z-10 flex-row items-center justify-between px-6 pb-2 pt-2'>
-          <Pressable
-            accessibilityRole='button'
-            onPress={handleBackToStudio}
-            className='h-11 w-11 items-center justify-center rounded-full border border-ring-primary/5 bg-white shadow-sm shadow-black/5'
-          >
-            <ArrowLeft color={THEME.ringPrimary} size={20} strokeWidth={1.5} />
-          </Pressable>
+          <BackButton onPress={handleBackToStudio} className='border-ring-primary/5 bg-white shadow-black/5' />
           <Text className='font-sans-medium text-[10px] uppercase tracking-[0.25em] text-ring-primary/60'>
             Measure Guide
           </Text>
-          <View className='h-11 w-11' />
+          <View className='h-10 w-10' />
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>

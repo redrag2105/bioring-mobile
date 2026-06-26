@@ -4,6 +4,8 @@ import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Defs, Ellipse, RadialGradient, Rect, Stop } from 'react-native-svg'
 
+import { BackButton } from '@/components/navigation/BackButton'
+
 const BACKGROUND_COLORS = ['#111821', '#17222D', '#0D1219'] as const
 
 function DarkSkeletonBlock({ className = '' }: { className?: string }) {
@@ -28,7 +30,11 @@ function SkeletonSpotlight() {
   )
 }
 
-export function ProductDetailSkeleton() {
+type ProductDetailSkeletonProps = {
+  onBack?: () => void
+}
+
+export function ProductDetailSkeleton({ onBack }: ProductDetailSkeletonProps) {
   const insets = useSafeAreaInsets()
 
   return (
@@ -38,12 +44,12 @@ export function ProductDetailSkeleton() {
 
       <View className='flex-1' style={{ paddingTop: insets.top }}>
         <View className='z-30 flex-row items-center justify-between px-5 pb-3 pt-2'>
-          <DarkSkeletonBlock className='h-11 w-11 rounded-full' />
+          {onBack ? <BackButton onPress={onBack} variant='dark' /> : <DarkSkeletonBlock className='h-9 w-9 rounded-full' />}
           <View className='items-center'>
             <DarkSkeletonBlock className='h-4 w-28 rounded-full' />
             <DarkSkeletonBlock className='mt-2 h-2 w-24 rounded-full opacity-60' />
           </View>
-          <DarkSkeletonBlock className='h-11 w-11 rounded-full' />
+          <DarkSkeletonBlock className='h-9 w-9 rounded-full' />
         </View>
 
         <View className='z-20 px-5'>

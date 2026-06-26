@@ -1,6 +1,7 @@
 import { MemoryPosterCatalogItem } from '@/components/memory/MemoryPosterCatalogItem'
 import { MemoryQrScannerModal } from '@/components/memory/MemoryQrScannerModal'
 import { ScreenHeader } from '@/components/screen/ScreenHeader'
+import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
 import { THEME } from '@/constants/theme'
 import { useMemoryCardsQuery } from '@/hooks/queries/useMemoryCardsQuery'
 import { useDynamicBottomTab } from '@/hooks/useDynamicBottomTabs'
@@ -10,9 +11,30 @@ import { useState } from 'react'
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+function MemoryCatalogSkeleton() {
+  return (
+    <View className='flex-row flex-wrap justify-between pt-2'>
+      {[0, 1, 2, 3].map((item) => (
+        <View key={item} className={`mb-6 w-[47%] ${item % 2 === 1 ? 'mt-10' : ''}`}>
+          <SkeletonBlock className='h-[230px] overflow-hidden rounded-t-full border-ring-primary/10 bg-white/65'>
+            <View className='h-28 items-center justify-end bg-ring-primary/5 pb-4'>
+              <View className='h-16 w-16 rounded-full bg-ring-primary/10' />
+            </View>
+            <View className='gap-3 p-4'>
+              <View className='h-3 w-20 rounded-full bg-ring-primary/10' />
+              <View className='h-4 w-full rounded-full bg-ring-primary/10' />
+              <View className='h-3 w-2/3 rounded-full bg-ring-primary/10' />
+            </View>
+          </SkeletonBlock>
+        </View>
+      ))}
+    </View>
+  )
+}
+
 export function MemoryScreen() {
   const handleScroll = useDynamicBottomTab()
-  const { data: memoryCards = [] } = useMemoryCardsQuery()
+  const { data: memoryCards = [], isLoading } = useMemoryCardsQuery()
   const [isScannerVisible, setScannerVisible] = useState(false)
 
   function handleScanned(code: string) {
@@ -68,7 +90,9 @@ export function MemoryScreen() {
           >
             <View className='px-5 pb-48 pt-4'>
               <View className='gap-5'>
-                {memoryCards.length > 0 ? (
+                {isLoading ? (
+                  <MemoryCatalogSkeleton />
+                ) : memoryCards.length > 0 ? (
                   /* Grid so le (Offset) tạo cảm giác nghệ thuật tự do */
                   <View className='flex-row flex-wrap justify-between pt-2'>
                     {memoryCards.map((memoryCard, index) => (

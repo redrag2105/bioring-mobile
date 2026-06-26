@@ -1,8 +1,8 @@
-import { ArrowLeft } from 'lucide-react-native'
-import { Pressable, Text, View } from 'react-native'
+import { BackButton } from '@/components/navigation/BackButton'
+import { Text, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import { FONTS, THEME } from '@/constants/theme'
+import { FONTS } from '@/constants/theme'
 
 type Props = {
   onBack: () => void
@@ -12,12 +12,7 @@ type Props = {
 export function ProductDetailHeader({ onBack, animatedStyle }: Props) {
   return (
     <Animated.View style={animatedStyle} className='z-30 flex-row items-center justify-between px-6 pb-2 pt-2'>
-      <Pressable
-        onPress={onBack}
-        className='h-10 w-10 items-center justify-center rounded-full border-[0.5px] border-white/10 bg-white/5 active:opacity-70'
-      >
-        <ArrowLeft color={THEME.ringSurface} size={18} strokeWidth={1} />
-      </Pressable>
+      <BackButton onPress={onBack} variant='dark' />
       <Text
         allowFontScaling={false}
         style={{ fontFamily: FONTS.serif }}
@@ -25,7 +20,7 @@ export function ProductDetailHeader({ onBack, animatedStyle }: Props) {
       >
         BIORING
       </Text>
-      <View className='h-10 w-10' />
+      <View className='h-9 w-9' />
     </Animated.View>
   )
 }

@@ -138,7 +138,7 @@ export default function ProductDetailScreen() {
       zoomOffset.value = 0
     })
 
-  if (isLoading) return <ProductDetailSkeleton />
+  if (isLoading) return <ProductDetailSkeleton onBack={handleBack} />
   if (isError || !product || !selectedMaterial) return null
 
   return (

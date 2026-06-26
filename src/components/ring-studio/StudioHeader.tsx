@@ -1,6 +1,5 @@
-import { THEME } from '@/constants/theme'
-import { ArrowLeft } from 'lucide-react-native'
-import { Pressable, Text, View } from 'react-native'
+import { BackButton } from '@/components/navigation/BackButton'
+import { Text, View } from 'react-native'
 
 type StudioHeaderProps = {
   onBack: () => void
@@ -11,12 +10,7 @@ type StudioHeaderProps = {
 export function StudioHeader({ onBack, eyebrow, title }: StudioHeaderProps) {
   return (
     <View className='z-30 flex-row items-center justify-between px-5 pt-2'>
-      <Pressable
-        onPress={onBack}
-        className='h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/75 shadow-sm shadow-ring-primary/10 active:opacity-75'
-      >
-        <ArrowLeft color={THEME.ringPrimary} size={21} strokeWidth={1.5} />
-      </Pressable>
+      <BackButton onPress={onBack} className='border-white/70 bg-white/75 shadow-ring-primary/10' />
 
       {eyebrow || title ? (
         <View className='items-center'>
@@ -29,7 +23,7 @@ export function StudioHeader({ onBack, eyebrow, title }: StudioHeaderProps) {
         <View />
       )}
 
-      <View className='h-11 w-11' />
+      <View className='h-10 w-10' />
     </View>
   )
 }

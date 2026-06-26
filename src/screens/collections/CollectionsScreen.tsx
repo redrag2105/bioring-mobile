@@ -1,5 +1,6 @@
+import { BackButton } from '@/components/navigation/BackButton'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, ChevronDown } from 'lucide-react-native'
+import { ChevronDown } from 'lucide-react-native'
 import React, { useEffect } from 'react'
 import { Dimensions, Image, Pressable, Text, View, type ViewStyle } from 'react-native'
 import Animated, {
@@ -66,13 +67,7 @@ export function CollectionsScreen({ entryAnimation = 'default' }: CollectionsScr
   return (
     <Animated.View className='flex-1 bg-ring-background' style={entryStyle}>
       <View style={{ paddingTop: insets.top + 10 }} className='absolute left-6 z-50'>
-        <Pressable
-          onPress={handleBack}
-          className='h-12 w-12 items-center justify-center rounded-full bg-white/50 shadow-sm'
-          style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-        >
-          <ArrowLeft color={THEME.ringPrimary} size={24} strokeWidth={1.5} />
-        </Pressable>
+        <BackButton onPress={handleBack} className='border-white/40 bg-white/55 shadow-sm' />
       </View>
 
       <Animated.FlatList

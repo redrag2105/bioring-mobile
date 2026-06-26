@@ -1,4 +1,3 @@
-import { ArrowLeft } from 'lucide-react-native'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import Animated, {
@@ -15,8 +14,8 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { CollectionFilterBar } from '@/components/collections/CollectionFilterBar'
 import { CollectionProductCard } from '@/components/collections/CollectionProductCard'
+import { BackButton } from '@/components/navigation/BackButton'
 import { SkeletonBlock } from '@/components/skeleton/SkeletonBlock'
-import { THEME } from '@/constants/theme'
 import { useCollectionDetailQuery } from '@/hooks/queries/useCollectionsQuery'
 import type { CollectionSortOption } from '@/types/collection.types'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -93,6 +92,40 @@ export function CollectionDetailScreen() {
   return (
     <View className='flex-1 bg-[#F6F4EF]'>
       <SafeAreaView className='flex-1' edges={['top']}>
+        <Animated.View
+          entering={FadeInDown.duration(800).easing(Easing.out(Easing.exp))}
+          className='z-50 bg-[#F6F4EF] pb-1'
+        >
+          <View className='flex-row items-start px-5 pt-3'>
+            <BackButton onPress={handleBack} className='mr-4 mt-1 border-ring-primary/5 bg-white shadow-black/5' />
+
+            <View className='flex-1'>
+              <Text className='mb-1 font-sans-bold text-[11px] uppercase tracking-[0.2em] text-txt-muted'>
+                The Exhibition
+              </Text>
+              <Text className='font-serif-medium text-[32px] leading-10 tracking-tight text-ring-primary'>
+                {collection.name}
+              </Text>
+            </View>
+          </View>
+
+          <CollectionFilterBar
+            isHotFiltered={isHotFiltered}
+            sortOption={sortOption}
+            priceRange={priceRange}
+            onToggleHot={() => setIsHotFiltered(!isHotFiltered)}
+            onSortOptionChange={handleSortOptionChange}
+            onPriceRangeChange={setPriceRange}
+            isPriceDrawerOpen={isPriceDrawerOpen}
+            togglePriceDrawer={() => {
+              setIsSortMenuOpen(false)
+              setIsPriceDrawerOpen((value) => !value)
+            }}
+            isSortMenuOpen={isSortMenuOpen}
+            toggleSortMenu={toggleSortMenu}
+          />
+        </Animated.View>
+
         <Animated.ScrollView
           ref={scrollRef}
           showsVerticalScrollIndicator={false}
@@ -101,46 +134,11 @@ export function CollectionDetailScreen() {
           contentContainerStyle={{ paddingBottom: insets.bottom + 60 }}
         >
           <Animated.View entering={FadeInDown.duration(800).easing(Easing.out(Easing.exp))}>
-            {/* Inline Left-Aligned Header */}
-            <View className='flex-row items-start px-5 pt-4'>
-              <Pressable
-                onPress={handleBack}
-                className='elevation-2 mr-4 mt-1 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
-              >
-                <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
-              </Pressable>
-
-              <View className='flex-1'>
-                <Text className='mb-1 font-sans-bold text-[11px] uppercase tracking-[0.2em] text-txt-muted'>
-                  The Exhibition
-                </Text>
-                <Text className='font-serif-medium text-[32px] leading-10 tracking-tight text-ring-primary'>
-                  {collection.name}
-                </Text>
-              </View>
-            </View>
-
             <View className='mb-6 mt-3 px-5'>
               <Text className='font-sans text-[15px] leading-[26px] text-txt-muted'>{collection.description}</Text>
             </View>
 
-            <CollectionFilterBar
-              isHotFiltered={isHotFiltered}
-              sortOption={sortOption}
-              priceRange={priceRange}
-              onToggleHot={() => setIsHotFiltered(!isHotFiltered)}
-              onSortOptionChange={handleSortOptionChange}
-              onPriceRangeChange={setPriceRange}
-              isPriceDrawerOpen={isPriceDrawerOpen}
-              togglePriceDrawer={() => {
-                setIsSortMenuOpen(false)
-                setIsPriceDrawerOpen((value) => !value)
-              }}
-              isSortMenuOpen={isSortMenuOpen}
-              toggleSortMenu={toggleSortMenu}
-            />
-
-            <View className='relative mt-6 flex-1'>
+            <View className='relative mt-2 flex-1'>
               <Animated.View style={overlayStyle} className='absolute inset-0 z-10'>
                 <Pressable className='flex-1' onPress={closeAllMenus} />
               </Animated.View>
@@ -194,12 +192,7 @@ function CollectionDetailLoading({ onBack }: { onBack: () => void }) {
         <View className='z-10 flex-1'>
           {/* Inline Loading Header */}
           <View className='flex-row items-start px-5 pb-4 pt-4'>
-            <Pressable
-              onPress={onBack}
-              className='elevation-2 mr-4 mt-1 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
-            >
-              <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
-            </Pressable>
+            <BackButton onPress={onBack} className='mr-4 mt-1 border-ring-primary/5 bg-white shadow-black/5' />
 
             <View className='flex-1 justify-center pt-2'>
               <SkeletonBlock className='mb-3 h-3 w-24 rounded-full' />
@@ -237,12 +230,7 @@ function CollectionDetailEmpty({ onBack }: { onBack: () => void }) {
       <SafeAreaView className='z-10 flex-1' edges={['top']}>
         {/* Left Aligned Back Button for Empty State */}
         <View className='w-full px-5 pt-4'>
-          <Pressable
-            onPress={onBack}
-            className='elevation-2 h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-ring-primary/5 bg-white shadow-sm shadow-black/5'
-          >
-            <ArrowLeft color={THEME.ringPrimary} size={22} strokeWidth={1.5} />
-          </Pressable>
+          <BackButton onPress={onBack} className='border-ring-primary/5 bg-white shadow-black/5' />
         </View>
 
         <View className='flex-1 justify-center gap-4 px-8'>

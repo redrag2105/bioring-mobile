@@ -1,5 +1,6 @@
+import { BackButton } from '@/components/navigation/BackButton'
 import { THEME } from '@/constants/theme'
-import { ArrowLeft, HandMetal, Info, Torus } from 'lucide-react-native'
+import { HandMetal, Info, Torus } from 'lucide-react-native'
 import { Pressable, Text, View } from 'react-native'
 
 type MeasureModeHeaderProps = {
@@ -21,15 +22,7 @@ export function MeasureModeHeader({
 }: MeasureModeHeaderProps) {
   return (
     <View className='mb-3 flex-row items-center justify-between gap-3'>
-      <Pressable
-        accessibilityRole='button'
-        accessibilityLabel='Back'
-        onPress={onBack}
-        className='h-10 w-10 items-center justify-center rounded-full border border-ring-primary/10 bg-white/80 shadow-sm shadow-ring-primary/5'
-        style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-      >
-        <ArrowLeft color={THEME.ringPrimary} size={18} strokeWidth={1.8} />
-      </Pressable>
+      <BackButton onPress={onBack} />
 
       <View className='flex-1 items-center'>
         <Text
